@@ -1,10 +1,41 @@
-<html lang="en" class="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>React Gemini App</title>
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Matthew Keefe - About Me</title>
   <link rel="stylesheet" href="/index.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Prevent flash of unstyled content by setting theme immediately
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      
+      document.documentElement.classList.add(theme);
+      
+      // Update meta theme-color
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', theme === 'dark' ? '#0f172a' : '#ffffff');
+      }
+    })();
+  </script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
 </head>
 <body class="min-h-screen">
   <div id="root"></div>

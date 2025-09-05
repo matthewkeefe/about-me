@@ -28,27 +28,65 @@ const MoonIcon = () => (
 // CloudAnimation removed — using static background instead
 
 function App() {
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState(() => {
+    // Check localStorage first, then system preference, fallback to dark
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme;
+    }
+    
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    
+    return 'light';
+  });
 
   useEffect(() => {
-    // Set theme on mount
-    if (document.documentElement.classList.contains('dark')) {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-  }, []);
+    // Apply theme to document and save to localStorage
+    const applyTheme = (currentTheme: string) => {
+      const root = document.documentElement;
+      
+      // Remove all theme classes first
+      root.classList.remove('dark', 'light');
+      
+      // Add the current theme class
+      root.classList.add(currentTheme);
+      
+      // Save to localStorage
+      localStorage.setItem('theme', currentTheme);
+      
+      // Update meta theme-color for mobile browsers
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#0f172a' : '#ffffff');
+      }
+    };
+
+    applyTheme(theme);
+
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+      const savedTheme = localStorage.getItem('theme');
+      if (!savedTheme) {
+        // Only follow system preference if user hasn't manually set a theme
+        const newTheme = e.matches ? 'dark' : 'light';
+        setTheme(newTheme);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    
+    return () => {
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
+    };
+  }, [theme]);
   
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.remove('light');
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-    }
   };
 
   const navLinks = ["Showcase", "Docs", "Blog", "Analytics", "Commerce", "Templates"];
@@ -70,10 +108,30 @@ function App() {
           <button 
             type="button" 
             onClick={toggleTheme}
-            className="rounded-md p-2 ring-1 ring-slate-900/10 dark:ring-slate-300/10 hover:bg-slate-50 dark:hover:bg-slate-900"
+            className="group relative rounded-lg p-2 ring-1 ring-slate-900/10 dark:ring-slate-300/10 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 ease-in-out"
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+            <div className="relative h-5 w-5">
+              <div 
+                className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
+                  theme === 'dark' 
+                    ? 'rotate-0 scale-100 opacity-100' 
+                    : 'rotate-90 scale-0 opacity-0'
+                }`}
+              >
+                <SunIcon />
+              </div>
+              <div 
+                className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
+                  theme === 'light' 
+                    ? 'rotate-0 scale-100 opacity-100' 
+                    : '-rotate-90 scale-0 opacity-0'
+                }`}
+              >
+                <MoonIcon />
+              </div>
+            </div>
+            <span className="sr-only">Toggle theme</span>
           </button>
         </nav>
       </header>
