@@ -1,0 +1,62 @@
+/* Global light/dark fallback for full-page background and text color. This ensures the theme
+  applies even if Tailwind utilities aren't available (CDN build or custom CSS). */
+html, body {
+  height: 100%;
+}
+
+/* Default (light) */
+body {
+  background-color: #ffffff;
+  color: #000000;
+  min-height: 100vh;
+}
+
+/* When a .dark class is present on the document (html or body), use dark background & white text */
+html.dark body, body.dark {
+  background-color: #0f172a; /* slate-900/950 like */
+  color: #ffffff;
+}
+
+.background-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Grid disabled - no background pattern */
+  background-image: none;
+  z-index: -20; /* Place behind all other content */
+}
+
+.spotlight {
+  /* Light mode purple radial gradient glow */
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.1), transparent 70%);
+}
+
+.dark body, body.dark {
+  /* Ensure dark mode text color is white */
+  background-color: #ffffff25;
+}
+
+.light body, body.light {
+  /* Ensure light mode text color is black */
+  background-color: #00000025;
+}
+
+.dark .background-container::before {
+  /* Grid disabled in dark mode as well */
+  background-image: none;
+}
+
+.dark .spotlight {
+  /* Dark mode purple radial gradient glow */
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), transparent 70%);
+}
+
+.light .background-container::before {
+  /* Light mode grid disabled */
+  background-image: none;
+}
+
+.light .spotlight {
+  /* Light mode purple radial gradient glow */
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(216, 216, 227, 0.863), transparent 70%);
+}
