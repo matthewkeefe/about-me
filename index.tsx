@@ -6,10 +6,13 @@ import {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 
 const LogoIcon = () => (
-  <svg aria-hidden="true" viewBox="0 0 38 30" fill="none" className="h-7 w-auto text-slate-900 dark:text-white">
-    <path d="M19 0L0 15L19 30L38 15L19 0Z" fill="currentColor" fillOpacity="0.5"></path>
-    <path d="M19 11.25L3.8 22.5L19 30L34.2 22.5L19 11.25Z" fill="currentColor"></path>
-  </svg>
+  // Use the prebuilt SVG asset so it can be swapped/updated outside of the code
+  <img
+    src="/assets/mk-clouds-favicon.svg"
+    alt="Matthew Keefe logo"
+    role="img"
+    className="h-7 w-auto"
+  />
 );
 
 const SunIcon = () => (
@@ -35,12 +38,12 @@ function App() {
       return savedTheme;
     }
     
-    // Check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
+    // // Check system preference
+    // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    //   return 'dark';
+    // }
     
-    return 'light';
+    return 'dark'; // Default theme
   });
 
   useEffect(() => {
@@ -89,7 +92,7 @@ function App() {
     setTheme(newTheme);
   };
 
-  const navLinks = ["Showcase", "Docs", "Blog", "Analytics", "Commerce", "Templates"];
+  const navLinks = ["Interactive Resume", "Projects", "Music", "Social"];
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
@@ -100,7 +103,7 @@ function App() {
           </a>
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map(link => (
-              <a key={link} href="#" className="text-sm font-medium text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white light:text-slate-900 light:hover:text-slate-700">
+              <a key={link} href={link === 'Interactive Resume' ? '/resume.html' : '#'} className="text-sm font-medium text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white light:text-slate-900 light:hover:text-slate-700">
                 {link}
               </a>
             ))}
@@ -141,19 +144,16 @@ function App() {
           className="spotlight absolute left-1/2 top-0 -z-10 h-[50rem] w-[50rem] -translate-x-1/2"
           aria-hidden="true"
         />
-        <div className="text-center p-8 max-w-4xl mx-auto">
+        <div className="text-left p-8 max-w-4xl mx-auto">
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl">
             Hi, I'm Matthew Keefe!
           </h1>
           <p className="mt-6 max-w-3xl mx-auto text-lg leading-8 text-slate-700 dark:text-slate-400">
             I work as an Senior Software Engineering Manager in the Chicagoland area (USA). I have a passion for building beautiful, performant, and accessible web applications. This page is under construction.
           </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <a href="#" className="rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 dark:active:bg-slate-300 dark:focus-visible:outline-white">
-              Get started
-            </a>
-            <a href="#" className="text-sm font-semibold leading-6 text-slate-900 dark:text-white">
-              Learn more <span aria-hidden="true">→</span>
+          <div className="mt-10 flex items-left gap-x-6">
+            <a href="/resume.html" className="rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 dark:active:bg-slate-300 dark:focus-visible:outline-white">
+              My Skills and Experience
             </a>
           </div>
         </div>

@@ -1,0 +1,420 @@
+{
+  "summary": {
+    "professional_summary": "Senior Software Engineering Manager with 15+ years of experience leading globally distributed teams to deliver scalable, enterprise-grade, cloud-native platforms and solutions. Demonstrated excellence in people management, with a proven ability to oversee the full employee lifecycle (including talent acquisition, onboarding, performance development, and separation) with a focus on building high-performing, inclusive teams. Expertise spans Agile delivery, DevOps strategy, platform modernization, and cross-functional program leadership. Recognized for aligning technical initiatives with business objectives, fostering a culture of accountability and continuous improvement, and driving measurable outcomes in complex organizational environments.",
+    "key_skills": [
+      "people_leadership",
+      "global_team_management",
+      "agile",
+      "devops_strategy",
+      "cicd",
+      "salesforce_platform",
+      "servicenow",
+      "governance",
+      "change_mgmt",
+      "program_mgmt",
+      "portfolio_mgmt",
+      "executive_comms",
+      "stakeholder_mgmt",
+      "process_automation",
+      "ai_enablement"
+    ],
+    "technical_proficiencies": [
+      "apex",
+      "lwc",
+      "soql",
+      "power_bi",
+      "jira",
+      "confluence",
+      "leanix_cmdb",
+      "github_actions",
+      "bamboo",
+      "harness",
+      "excel_advanced",
+      "sharepoint_teams"
+    ]
+  },
+  "employment": [
+    {
+      "title": "Senior Engineering Manager",
+      "company": "CDK Global, Hoffman Estates, IL",
+      "start_date": "2022-11",
+      "end_date": "Present",
+      "summary": "Led global engineering and analyst teams delivering enterprise applications; owned full employee lifecycle; aligned technical strategy with business outcomes.",
+      "experience": [
+        {
+          "text": "Led global teams of software engineers and analysts across multiple functional groups responsible for delivering scalable, high-quality, enterprise applications; owned hiring, onboarding, performance, and development.",
+          "tags": ["people_leadership", "global_team_management", "executive_comms"]
+        },
+        {
+          "text": "Partnered with senior leadership (directors and VPs), HR, and PMO to align technical strategy with business objectives.",
+          "tags": ["stakeholder_mgmt", "executive_comms", "program_mgmt"]
+        },
+        {
+          "text": "Directed the enterprise-wide implementation of ServiceNow SPM, improving visibility and execution across demand-to-delivery workflows.",
+          "tags": ["servicenow_spm", "portfolio_mgmt", "governance"]
+        },
+        {
+          "text": "Integrated Test Management and advanced reporting in ServiceNow for ~200 users; facilitated user training for 5+ teams.",
+          "tags": ["servicenow_test_mgmt", "test_management", "training_enablement", "servicenow"]
+        },
+        {
+          "text": "Developed and delivered AI training programs for individual contributors.",
+          "tags": ["ai_enablement", "training_enablement"]
+        },
+        {
+          "text": "Evolved DevOps pipeline adopting GitHub Actions and Harness.io to navigate changing tech landscapes.",
+          "tags": ["devops_strategy", "cicd", "github_actions", "harness"]
+        },
+        {
+          "text": "Oversaw Salesforce DevOps migration from Bamboo to GitHub Actions to Harness.io; retired Change Sets; streamlined deployments and reduced configuration deployment time by half while ensuring traceability and compliance.",
+          "tags": ["sf_devops", "bamboo", "github_actions", "harness", "cicd"]
+        },
+        {
+          "text": "Supervised a Salesforce DevOps intern producing functional prototypes and knowledge transfer with GitHub Actions and SF CLI.",
+          "tags": ["people_leadership", "sf_devops", "github_actions"]
+        },
+        {
+          "text": "Built Power BI dashboards for SLA accountability using DAX, Power Query M, and REST API connections; achieved ~99%+ SLA adherence.",
+          "tags": ["power_bi", "dax", "power_query_m", "rest_api"]
+        },
+        {
+          "text": "Orchestrated cyber incident response affecting 150+ applications; led outage bridge, CMDB remediation, and restoration efforts.",
+          "tags": ["incident_response", "leanix_cmdb", "program_mgmt"]
+        },
+        {
+          "text": "Standardized work management practices; realigned Scrum Master support to ensure consistent methodology across enterprise app teams.",
+          "tags": ["agile", "governance", "process_automation"]
+        },
+        {
+          "text": "Transitioned Enterprise Applications to a hybrid Waterfall/Agile model in ServiceNow, improving visibility across dev, ops, and break-fix.",
+          "tags": ["servicenow", "agile", "governance"]
+        },
+        {
+          "text": "Partnered with HR to draft a new job architecture framework supporting career development and organizational clarity.",
+          "tags": ["people_leadership", "governance"]
+        },
+        {
+          "text": "Applied Harness.io certification learnings to optimize CI pipelines.",
+          "tags": ["harness", "cicd"]
+        },
+        {
+          "text": "Drove a culture of continuous learning and accountability, reaching 100% completion of team training and development goals.",
+          "tags": ["people_leadership", "training_enablement"]
+        }
+      ]
+    },
+    {
+      "title": "Engineering Manager",
+      "company": "CDK Global, Hoffman Estates, IL",
+      "start_date": "2019-08",
+      "end_date": "2022-11",
+      "summary": "Managed global teams delivering internal product applications and platform services; aligned priorities with stakeholders; scaled DevOps practices.",
+      "experience": [
+        {
+          "text": "Managed global teams of 7–14 engineers and consultants across the U.S., U.K., and India; partnered with product, architecture, and business stakeholders.",
+          "tags": ["global_team_management", "people_leadership", "stakeholder_mgmt"]
+        },
+        {
+          "text": "Managed two cross-functional teams (Analysts, Engineers, QA, Technical PM) across multiple business areas.",
+          "tags": ["people_leadership", "program_mgmt"]
+        },
+        {
+          "text": "Oversaw architecture and delivery of a full-stack Node.js and React Sales Discovery app integrated with standard and custom Salesforce REST APIs.",
+          "tags": ["node", "react", "sf_rest_api", "architecture"]
+        },
+        {
+          "text": "Owned hiring, onboarding, goal-setting, performance reviews, engagement, career planning, and retention.",
+          "tags": ["people_leadership"]
+        },
+        {
+          "text": "Designed a custom Salesforce DevOps deployment strategy using SFDX and Bamboo/Bitbucket Server, improving reliability and developer efficiency.",
+          "tags": ["sf_devops", "bamboo", "bitbucket_server", "cicd"]
+        },
+        {
+          "text": "Coordinated Salesforce backups and release pipelines to improve recovery readiness and audit compliance.",
+          "tags": ["backup_recovery", "sf_devops", "governance"]
+        },
+        {
+          "text": "Developed Jira dashboards and custom reports to track sprints, link work to releases, and improve transparency.",
+          "tags": ["jira", "governance"]
+        },
+        {
+          "text": "Delivered large-scale engineering projects in partnership with apps, sales, service, and product teams.",
+          "tags": ["program_mgmt", "stakeholder_mgmt"]
+        },
+        {
+          "text": "Championed Agile methodologies, facilitated Scrum adoption, and drove continuous improvement.",
+          "tags": ["agile", "process_automation"]
+        },
+        {
+          "text": "Mentored interns and junior engineers to grow platform familiarity and skills.",
+          "tags": ["people_leadership", "training_enablement"]
+        },
+        {
+          "text": "Influenced platform governance and best practices, including UI/UX and HCI decisions and tooling selection.",
+          "tags": ["governance", "ui_ux"]
+        },
+        {
+          "text": "Implemented Slack workflow integrations to streamline issue triage.",
+          "tags": ["slack_automation", "process_automation"]
+        },
+        {
+          "text": "Created flow diagrams and documentation to support cross-team collaboration and clarity.",
+          "tags": ["documentation"]
+        }
+      ]
+    },
+    {
+      "title": "Development Supervisor",
+      "company": "CDK Global, Hoffman Estates, IL",
+      "start_date": "2017-09",
+      "end_date": "2019-08",
+      "summary": "Supervised local and offshore engineering teams for Salesforce implementations; contributed to architecture and modernization.",
+      "experience": [
+        {
+          "text": "Managed development resources across U.S. and India to ensure coordination and delivery across time zones.",
+          "tags": ["global_team_management", "people_leadership"]
+        },
+        {
+          "text": "Designed technical architecture for a new Salesforce Service Cloud implementation aligned to enterprise integration standards.",
+          "tags": ["service_cloud", "architecture", "sf_rest_api"]
+        },
+        {
+          "text": "Oversaw launch of a new Salesforce instance and migrated the Employee Portal (Experience Cloud).",
+          "tags": ["experience_cloud", "salesforce_platform"]
+        },
+        {
+          "text": "Led hiring and onboarding for engineering roles during team expansion.",
+          "tags": ["people_leadership"]
+        },
+        {
+          "text": "Served as Salesforce SME and mentor for cross-functional teams and centers of excellence.",
+          "tags": ["salesforce_platform", "training_enablement", "people_leadership"]
+        },
+        {
+          "text": "Guided application architecture, UI/UX best practices, and technical standards.",
+          "tags": ["architecture", "ui_ux", "governance"]
+        }
+      ]
+    },
+    {
+      "title": "Software Engineer Team Lead",
+      "company": "CDK Global, Hoffman Estates, IL",
+      "start_date": "2014-05",
+      "end_date": "2017-08",
+      "summary": "Led 10+ engineers across internal business units; set development standards and drove platform consistency.",
+      "experience": [
+        {
+          "text": "Defined coding standards, documentation practices, and code review processes to improve maintainability and consistency.",
+          "tags": ["governance", "documentation"]
+        },
+        {
+          "text": "Developed a centralized CSS/HTML style guide based on Twitter Bootstrap to standardize internal UI.",
+          "tags": ["css_html", "ui_ux"]
+        },
+        {
+          "text": "Facilitated knowledge-sharing sessions to grow Salesforce development expertise.",
+          "tags": ["salesforce_platform", "training_enablement"]
+        },
+        {
+          "text": "Collaborated on application architecture, usability, testing, and integration strategies.",
+          "tags": ["architecture", "ui_ux", "test_management", "sf_rest_api"]
+        },
+        {
+          "text": "Supported hiring and interviews to grow team capabilities.",
+          "tags": ["people_leadership"]
+        },
+        {
+          "text": "Implemented collaboration tools and documentation repositories for knowledge management.",
+          "tags": ["documentation", "confluence"]
+        }
+      ]
+    },
+    {
+      "title": "Applications Developer",
+      "company": "CDK Global, Hoffman Estates, IL",
+      "start_date": "2011-08",
+      "end_date": "2014-04",
+      "summary": "Built enterprise apps, Salesforce customizations, and integrations; improved UI and workflow efficiency.",
+      "experience": [
+        {
+          "text": "Built Salesforce cloud applications using Apex, jQuery, AJAX, and custom CSS for responsive UI.",
+          "tags": ["apex", "javascript", "css_html", "salesforce_platform"]
+        },
+        {
+          "text": "Developed reusable type-ahead lookup in Salesforce to improve efficiency and reduce input errors.",
+          "tags": ["salesforce_platform", "ui_ux", "lwc"]
+        },
+        {
+          "text": "Implemented local .NET apps with REST/Web Services for Salesforce connectivity.",
+          "tags": ["csharp", "rest_api", "salesforce_platform"]
+        },
+        {
+          "text": "Enhanced and maintained a Java-based Email-to-Case solution to improve ticket routing.",
+          "tags": ["java", "service_cloud"]
+        },
+        {
+          "text": "Collaborated with analysts and end users on requirements and system refinements.",
+          "tags": ["stakeholder_mgmt", "documentation"]
+        }
+      ]
+    },
+    {
+      "title": "Applications Developer",
+      "company": "Awana, Streamwood, IL",
+      "start_date": "2009-07",
+      "end_date": "2011-08",
+      "summary": "Delivered internal web apps for CRM, order entry, and portals; improved usability, data handling, and efficiency.",
+      "experience": [
+        {
+          "text": "Built and maintained applications using C#.NET, Apex (Salesforce), JavaScript, CSS, and HTML.",
+          "tags": ["csharp", "apex", "javascript", "css_html", "salesforce_platform"]
+        },
+        {
+          "text": "Customized Salesforce CRM to support workflows and customer interactions.",
+          "tags": ["salesforce_platform", "sales_cloud", "service_cloud"]
+        },
+        {
+          "text": "Developed command-line and shell scripts for data processing and batch tasks.",
+          "tags": ["bash", "unix_linux"]
+        },
+        {
+          "text": "Used advanced Excel to prepare, transform, and load large datasets across systems.",
+          "tags": ["excel_advanced", "process_automation"]
+        },
+        {
+          "text": "Supported rapid iteration while maintaining code stability and documentation standards.",
+          "tags": ["process_automation", "documentation"]
+        }
+      ]
+    },
+    {
+      "title": "Manager of Enterprise Applications",
+      "company": "Awana, Streamwood, IL",
+      "start_date": "2008-03",
+      "end_date": "2009-06",
+      "summary": "Led enterprise applications team across ERP, CRM, BI, web, and e-commerce; owned delivery and maintenance.",
+      "experience": [
+        {
+          "text": "Managed a cross-functional team supporting Salesforce, ERP, and internal applications.",
+          "tags": ["people_leadership", "program_mgmt"]
+        },
+        {
+          "text": "Supervised development, maintenance, and integration of web and back-office systems.",
+          "tags": ["architecture", "rest_api"]
+        },
+        {
+          "text": "Mentored team members and provided coaching and career development.",
+          "tags": ["people_leadership"]
+        },
+        {
+          "text": "Conducted performance reviews and facilitated goal-setting across technical roles.",
+          "tags": ["people_leadership"]
+        },
+        {
+          "text": "Prioritized and assigned project work based on business needs and interdependencies.",
+          "tags": ["program_mgmt", "stakeholder_mgmt"]
+        }
+      ]
+    },
+    {
+      "title": "Systems Analyst",
+      "company": "Awana, Streamwood, IL",
+      "start_date": "2006-01",
+      "end_date": "2008-03",
+      "summary": "Supported CRM and internal platforms via development and integrations; partnered with users and vendors.",
+      "experience": [
+        {
+          "text": "Designed and developed enhancements using C#.NET and Salesforce Apex.",
+          "tags": ["csharp", "apex", "salesforce_platform"]
+        },
+        {
+          "text": "Managed vendor and consultant relationships to align on deliverables and timelines.",
+          "tags": ["stakeholder_mgmt", "program_mgmt"]
+        },
+        {
+          "text": "Led multi-system integrations to streamline data flow and improve reporting accuracy.",
+          "tags": ["rest_api", "process_automation", "architecture"]
+        },
+        {
+          "text": "Built web interfaces and backend processes supporting internal departments.",
+          "tags": ["css_html", "javascript", "architecture"]
+        },
+        {
+          "text": "Documented functional requirements and technical workflows.",
+          "tags": ["documentation"]
+        }
+      ]
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Northern Illinois University, DeKalb, IL",
+      "start_date": "2004-10",
+      "end_date": "2005-05",
+      "summary": "Supported undergraduate CS courses; provided instruction and evaluation across multiple languages.",
+      "experience": [
+        {
+          "text": "Graded assignments in COBOL, C++, and SQL for freshman to senior students.",
+          "tags": ["cobol", "cpp", "documentation"]
+        },
+        {
+          "text": "Advised students on programming techniques, syntax, and debugging.",
+          "tags": ["training_enablement"]
+        },
+        {
+          "text": "Assisted professors with course materials and classroom activities.",
+          "tags": ["training_enablement", "documentation"]
+        },
+        {
+          "text": "Explained complex concepts one-on-one to improve understanding.",
+          "tags": ["training_enablement"]
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "title": "Bachelor of Science in Applied Computer Science",
+      "school": "Northern Illinois University, DeKalb, IL",
+      "start_date": "2001",
+      "end_date": "2005",
+      "gpa": "3.33 / 4.0",
+      "experience": [
+        {
+          "text": "Developed transferable programming skills emphasizing logic structures and language-agnostic problem solving.",
+          "tags": ["cpp", "cobol", "documentation"]
+        },
+        {
+          "text": "Gained foundational computing and architecture understanding via C++, Assembly (IBM JCL), and COBOL.",
+          "tags": ["cpp", "cobol", "architecture"]
+        },
+        {
+          "text": "Excelled in speech, writing, literature, communications, and analytical courses.",
+          "tags": ["executive_comms"]
+        },
+        {
+          "text": "Completed UNIX/Linux coursework laying foundations for Bash shell scripting used in DevOps.",
+          "tags": ["unix_linux", "bash", "cicd"]
+        },
+        {
+          "text": "Held multiple summer internships providing IT support in enterprise environments.",
+          "tags": ["process_automation", "people_leadership"]
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Harness Certified Continuous Integration Developer",
+      "issuer": "Harness University",
+      "description": "Demonstrated expertise in designing, implementing, and managing CI pipelines using Harness.io.",
+      "date": "2024-11"
+    },
+    {
+      "name": "Salesforce Trailhead Ranger",
+      "issuer": "Salesforce Trailhead",
+      "description": "Achieved Ranger status by earning 1,000+ points through completing modules and projects on the Salesforce platform.",
+      "date": "2025-09"
+    }
+  ]
+}
