@@ -4,29 +4,7 @@
 */
 import {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-
-const LogoIcon = () => (
-  // Use the prebuilt SVG asset so it can be swapped/updated outside of the code
-  <img
-    src="/assets/mk-clouds-favicon.svg"
-    alt="Matthew Keefe logo"
-    role="img"
-    className="h-7 w-auto"
-  />
-);
-
-const SunIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5 stroke-slate-900 dark:stroke-slate-100">
-      <path d="M12.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"></path>
-      <path strokeLinecap="round" d="M10 5.5v-1M10 15.5v-1M14.5 10h1M4.5 10h1M12.75 7.25l.5-.5M6.75 13.25l.5-.5M12.75 12.75l.5.5M6.75 6.75l.5.5"></path>
-  </svg>
-);
-
-const MoonIcon = () => (
-    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5 stroke-slate-900 dark:stroke-slate-100">
-        <path d="M15.224 11.724a5.5 5.5 0 0 1-6.949-6.949 5.5 5.5 0 1 0 6.949 6.949Z"></path>
-    </svg>
-);
+import { Header } from './src/components/Header';
 
 // CloudAnimation removed — using static background instead
 
@@ -92,52 +70,9 @@ function App() {
     setTheme(newTheme);
   };
 
-  const navLinks = ["Interactive Resume", "Projects", "Music", "Social"];
-
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      <header className="w-full p-4 border-b border-slate-900/10 dark:border-slate-300/10">
-        <nav className="flex items-center justify-between max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <a href="#" aria-label="Home page">
-            <LogoIcon />
-          </a>
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map(link => (
-              <a key={link} href={link === 'Interactive Resume' ? '/resume.html' : '#'} className="text-sm font-medium text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white light:text-slate-900 light:hover:text-slate-700">
-                {link}
-              </a>
-            ))}
-          </div>
-          <button 
-            type="button" 
-            onClick={toggleTheme}
-            className="group relative rounded-lg p-2 ring-1 ring-slate-900/10 dark:ring-slate-300/10 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 ease-in-out"
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          >
-            <div className="relative h-5 w-5">
-              <div 
-                className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
-                  theme === 'dark' 
-                    ? 'rotate-0 scale-100 opacity-100' 
-                    : 'rotate-90 scale-0 opacity-0'
-                }`}
-              >
-                <SunIcon />
-              </div>
-              <div 
-                className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
-                  theme === 'light' 
-                    ? 'rotate-0 scale-100 opacity-100' 
-                    : '-rotate-90 scale-0 opacity-0'
-                }`}
-              >
-                <MoonIcon />
-              </div>
-            </div>
-            <span className="sr-only">Toggle theme</span>
-          </button>
-        </nav>
-      </header>
+      <Header theme={theme} onThemeToggle={toggleTheme} variant="main" />
 
       <main className="background-container flex-grow flex items-center justify-center isolate relative">
         <div

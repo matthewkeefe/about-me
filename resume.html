@@ -8,20 +8,23 @@
   <title>Matthew Keefe — Interactive Resume</title>
   <link rel="stylesheet" href="/index.css">
   <link rel="icon" type="image/x-icon" href="/assets/mk-clouds-favicon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     // Prevent flash of unstyled content by setting theme immediately
     (function() {
       const savedTheme = localStorage.getItem('theme');
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      
       document.documentElement.classList.add(theme);
+      
+      // Update meta theme-color
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
       if (metaThemeColor) {
         metaThemeColor.setAttribute('content', theme === 'dark' ? '#0f172a' : '#ffffff');
       }
     })();
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',

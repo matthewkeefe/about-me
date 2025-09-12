@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-
-const LogoIcon = () => (
-  <img
-    src="/assets/mk-clouds-favicon.svg"
-    alt="Matthew Keefe logo"
-    role="img"
-    className="h-7 w-auto"
-  />
-);
+import { Header } from "./src/components/Header";
 
 const Section = ({ title, children }: { title: string; children: any }) => (
   <section className="mt-8 p-6 rounded-lg bg-white/70 dark:bg-slate-800/60 ring-1 ring-slate-900/5 dark:ring-white/5">
@@ -123,24 +115,7 @@ function ResumeApp() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      <header className="w-full p-4 border-b border-slate-900/10 dark:border-slate-300/10">
-        <nav className="flex items-center justify-between max-w-6xl mx-auto px-4">
-          <a href="/" aria-label="Home page">
-            <LogoIcon />
-          </a>
-          <div className="flex items-center gap-4">
-            <a href="/" className="text-sm text-slate-700 dark:text-slate-300">
-              Back
-            </a>
-            <button
-              onClick={toggleTheme}
-              className="rounded p-2 ring-1 ring-slate-900/10 dark:ring-slate-300/10 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-            >
-              {theme === "dark" ? "Light" : "Dark"}
-            </button>
-          </div>
-        </nav>
-      </header>
+      <Header theme={theme} onThemeToggle={toggleTheme} variant="resume" />
 
       <main className="flex-grow py-12">
         <div className="max-w-4xl mx-auto px-4">
@@ -191,7 +166,7 @@ function ResumeApp() {
               {/* Left side panel */}
               <aside className="md:col-span-1">
                 {resume && (
-                  <div className="md:sticky md:top-6">
+                  <div className="space-y-8">
                     <Section title="Professional Summary">
                       <p className="whitespace-pre-line text-sm">
                         {resume.summary?.professional_summary}
