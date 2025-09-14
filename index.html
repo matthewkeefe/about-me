@@ -4,24 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#ffffff" />
-  <meta name="color-scheme" content="light dark" />
   <title>Matt Keefe</title>
+
   <link rel="stylesheet" href="/index.css">
   <link rel="icon" type="image/x-icon" href="/assets/mk-clouds-favicon.svg" />
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <script>
+    // Clear old theme settings on first load after refactor
+    if (!localStorage.getItem('themeSystemV2')) {
+      localStorage.removeItem('theme');
+      localStorage.removeItem('darkMode');
+      localStorage.setItem('themeSystemV2', 'true');
+    }
+    
     // Prevent flash of unstyled content by setting theme immediately
     (function() {
-      const savedTheme = localStorage.getItem('theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      const savedTheme = localStorage.getItem('theme') || 'slate';
+      const savedDarkMode = localStorage.getItem('darkMode');
+      const isDarkMode = savedDarkMode ? JSON.parse(savedDarkMode) : false;
       
-      document.documentElement.classList.add(theme);
+      // Apply theme class (always slate for now)
+      document.documentElement.classList.add(savedTheme);
+      
+      // Apply dark mode if enabled
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+      }
       
       // Update meta theme-color
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
       if (metaThemeColor) {
-        metaThemeColor.setAttribute('content', theme === 'dark' ? '#0f172a' : '#ffffff');
+        const lightColor = '#ffffff'; // White for light mode
+        const darkColor = '#3f3f46'; // Dark slate for dark mode
+        metaThemeColor.setAttribute('content', isDarkMode ? darkColor : lightColor);
       }
     })();
   </script>

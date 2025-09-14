@@ -5,74 +5,53 @@
 import {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import { Header } from './src/components/Header';
+import { loadTheme, applyTheme, type Theme } from './src/utils/themes';
 
 // CloudAnimation removed — using static background instead
 
 function App() {
-  const [theme, setTheme] = useState(() => {
-    // Check localStorage first, then system preference, fallback to dark
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    
-    // // Check system preference
-    // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    //   return 'dark';
-    // }
-    
-    return 'dark'; // Default theme
+  // Separate state for theme name and dark mode
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    return savedTheme && ['slate'].includes(savedTheme) ? savedTheme : 'slate';
+  });
+
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const savedDarkMode = localStorage.getItem('darkMode');
+    return savedDarkMode ? JSON.parse(savedDarkMode) : false;
   });
 
   useEffect(() => {
-    // Apply theme to document and save to localStorage
-    const applyTheme = (currentTheme: string) => {
-      const root = document.documentElement;
-      
-      // Remove all theme classes first
-      root.classList.remove('dark', 'light');
-      
-      // Add the current theme class
-      root.classList.add(currentTheme);
+    const handleThemeUpdate = async () => {
+      // Apply theme with dark mode
+      applyTheme(theme, isDarkMode);
+      await loadTheme(theme);
       
       // Save to localStorage
-      localStorage.setItem('theme', currentTheme);
-      
-      // Update meta theme-color for mobile browsers
-      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-      if (metaThemeColor) {
-        metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#0f172a' : '#ffffff');
-      }
+      localStorage.setItem('theme', theme);
+      localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
     };
 
-    applyTheme(theme);
-
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      const savedTheme = localStorage.getItem('theme');
-      if (!savedTheme) {
-        // Only follow system preference if user hasn't manually set a theme
-        const newTheme = e.matches ? 'dark' : 'light';
-        setTheme(newTheme);
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
-    
-    return () => {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange);
-    };
-  }, [theme]);
+    handleThemeUpdate();
+  }, [theme, isDarkMode]);
   
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme as Theme);
+  };
+
+  const handleDarkModeToggle = () => {
+    setIsDarkMode(!isDarkMode);
   };
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      <Header theme={theme} onThemeToggle={toggleTheme} variant="main" />
+      <Header 
+        theme={theme} 
+        isDarkMode={isDarkMode}
+        onThemeChange={handleThemeChange} 
+        onDarkModeToggle={handleDarkModeToggle}
+        variant="main" 
+      />
 
       <main className="background-container flex-grow flex items-center justify-center isolate relative">
         <div

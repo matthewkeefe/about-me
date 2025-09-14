@@ -1,34 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Header } from "./src/components/Header";
+import { loadTheme, applyTheme, type Theme } from "./src/utils/themes";
 
 const Section = ({ title, children }: { title: string; children: any }) => (
-  <section className="mt-8 p-6 rounded-lg bg-white/70 dark:bg-slate-800/60 ring-1 ring-slate-900/5 dark:ring-white/5">
-    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+  <section className="mt-8 p-6 rounded-lg bg-card dark:bg-card ring-1 ring-border">
+    <h3 className="text-lg font-semibold text-foreground">
       {title}
     </h3>
-    <div className="mt-3 text-slate-700 dark:text-slate-300">{children}</div>
+    <div className="mt-3 text-foreground/80">{children}</div>
   </section>
 );
 
 function ResumeApp() {
-  const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) return saved;
-    return "dark";
+  // Separate state for theme name and dark mode
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem("theme") as Theme;
+    return savedTheme && ['slate'].includes(savedTheme) ? savedTheme : 'slate';
+  });
+
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const savedDarkMode = localStorage.getItem('darkMode');
+    return savedDarkMode ? JSON.parse(savedDarkMode) : false;
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove("dark", "light");
-    root.classList.add(theme);
-    localStorage.setItem("theme", theme);
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta)
-      meta.setAttribute("content", theme === "dark" ? "#0f172a" : "#ffffff");
-  }, [theme]);
+    const handleThemeUpdate = async () => {
+      applyTheme(theme, isDarkMode);
+      await loadTheme(theme);
+      localStorage.setItem("theme", theme);
+      localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+    };
 
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+    handleThemeUpdate();
+  }, [theme, isDarkMode]);
+
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme as Theme);
+  };
+
+  const handleDarkModeToggle = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   // Data loaded from content files
   const [resume, setResume] = useState<any | null>(null);
@@ -115,7 +128,13 @@ function ResumeApp() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      <Header theme={theme} onThemeToggle={toggleTheme} variant="resume" />
+      <Header 
+        theme={theme} 
+        isDarkMode={isDarkMode}
+        onThemeChange={handleThemeChange} 
+        onDarkModeToggle={handleDarkModeToggle}
+        variant="resume" 
+      />
 
       <main className="flex-grow py-12">
         <div className="max-w-4xl mx-auto px-4">
@@ -258,13 +277,13 @@ function ResumeApp() {
                           <div className="flex items-baseline justify-between">
                             <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
                               {job.title}{" "}
-                              <span className="font-normal text-slate-600 dark:text-slate-300">
+                              <p className="font-normal text-slate-600 dark:text-slate-300">
                                 @ {job.company}
-                              </span>
+                              </p>
                             </h4>
                             <span className="text-xs text-slate-500 dark:text-slate-400">
                               {job.start_date}
-                              {job.end_date ? ` — ${job.end_date}` : ""}
+                              {job.end_date ? ` to ${job.end_date}` : ""}
                             </span>
                           </div>
                           <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">

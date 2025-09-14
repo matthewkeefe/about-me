@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { getAvailableThemes } from '../utils/themes';
 
 interface HeaderProps {
   theme: string;
-  onThemeToggle: () => void;
+  isDarkMode: boolean;
+  onThemeChange: (theme: string) => void;
+  onDarkModeToggle: () => void;
   variant?: 'main' | 'resume';
 }
 
@@ -16,23 +19,124 @@ const LogoIcon = () => (
 );
 
 const SunIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5 stroke-slate-900 dark:stroke-slate-100">
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5 stroke-foreground stroke-2">
     <path d="M12.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"></path>
     <path strokeLinecap="round" d="M10 5.5v-1M10 15.5v-1M14.5 10h1M4.5 10h1M12.75 7.25l.5-.5M6.75 13.25l.5-.5M12.75 12.75l.5.5M6.75 6.75l.5.5"></path>
   </svg>
 );
 
 const MoonIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5 stroke-slate-900 dark:stroke-slate-100">
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5 stroke-foreground stroke-2">
     <path d="M15.224 11.724a5.5 5.5 0 0 1-6.949-6.949 5.5 5.5 0 1 0 6.949 6.949Z"></path>
   </svg>
 );
 
-export const Header: React.FC<HeaderProps> = ({ theme, onThemeToggle, variant = 'main' }) => {
-  const navLinks = ["Interactive Resume", "Projects", "Music", "Social"];
+const ChevronDownIcon = () => (
+  <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+  </svg>
+);
+
+const ThemeDropdown = ({ theme, onThemeChange }: { theme: string; onThemeChange: (theme: string) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Get available themes from utility
+  const availableThemes = getAvailableThemes();
+  
+  // Show only alternative themes (not the current one)
+  const alternativeThemes = availableThemes.filter(t => t !== theme);
+  
+  // Display names for themes
+  const themeDisplayNames: Record<string, string> = {
+    slate: 'Slate',
+    green: 'Green'
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <header className="w-full p-4 border-b border-slate-900/10 dark:border-slate-300/10">
+    <div className="relative" ref={dropdownRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+      >
+        {themeDisplayNames[theme] || theme}
+        <ChevronDownIcon />
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 z-50 mt-2 w-32 origin-top-right rounded-md border border-border bg-popover shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="py-1">
+            {alternativeThemes.map((themeName) => (
+              <button
+                key={themeName}
+                onClick={() => {
+                  onThemeChange(themeName);
+                  setIsOpen(false);
+                }}
+                className="block w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground text-popover-foreground"
+              >
+                {themeDisplayNames[themeName] || themeName}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const DarkModeToggle = ({ isDark, onToggle }: { isDark: boolean; onToggle: () => void }) => (
+  <button 
+    type="button" 
+    onClick={onToggle}
+    className="group relative rounded-lg p-2 ring-1 ring-border hover:bg-accent hover:text-accent-foreground transition-all duration-200 ease-in-out"
+    aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+  >
+    <div className="relative h-5 w-5">
+      <div 
+        className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
+          isDark 
+            ? 'rotate-0 scale-100 opacity-100' 
+            : 'rotate-90 scale-0 opacity-0'
+        }`}
+      >
+        <SunIcon />
+      </div>
+      <div 
+        className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
+          !isDark 
+            ? 'rotate-0 scale-100 opacity-100' 
+            : '-rotate-90 scale-0 opacity-0'
+        }`}
+      >
+        <MoonIcon />
+      </div>
+    </div>
+    <span className="sr-only">Toggle dark mode</span>
+  </button>
+);
+
+export const Header: React.FC<HeaderProps> = ({ theme, isDarkMode, onThemeChange, onDarkModeToggle, variant = 'main' }) => {
+  const navLinks = ["Interactive Resume", "Projects", "Music", "Social"];
+  const availableThemes = getAvailableThemes();
+
+  return (
+    <header className="w-full p-4 border-b border-border">
       <nav className={`flex items-center justify-between mx-auto px-4 sm:px-6 lg:px-8 ${variant === 'main' ? 'max-w-7xl' : 'max-w-6xl'}`}>
         <a href={variant === 'resume' ? '/' : '#'} aria-label={variant === 'resume' ? 'Home page' : 'Home page'}>
           <LogoIcon />
@@ -45,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, onThemeToggle, variant = 
                 <a 
                   key={link} 
                   href={link === 'Interactive Resume' ? '/resume.html' : '#'} 
-                  className="text-sm font-medium text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white light:text-slate-900 light:hover:text-slate-700"
+                  className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
                 >
                   {link}
                 </a>
@@ -54,39 +158,17 @@ export const Header: React.FC<HeaderProps> = ({ theme, onThemeToggle, variant = 
           )}
           
           {variant === 'resume' && (
-            <a href="/" className="text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+            <a href="/" className="text-sm text-foreground/70 hover:text-foreground transition-colors">
               Back
             </a>
           )}
           
-          <button 
-            type="button" 
-            onClick={onThemeToggle}
-            className="group relative rounded-lg p-2 ring-1 ring-slate-900/10 dark:ring-slate-300/10 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 ease-in-out"
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          >
-            <div className="relative h-5 w-5">
-              <div 
-                className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
-                  theme === 'dark' 
-                    ? 'rotate-0 scale-100 opacity-100' 
-                    : 'rotate-90 scale-0 opacity-0'
-                }`}
-              >
-                <SunIcon />
-              </div>
-              <div 
-                className={`absolute inset-0 transform transition-all duration-300 ease-in-out ${
-                  theme === 'light' 
-                    ? 'rotate-0 scale-100 opacity-100' 
-                    : '-rotate-90 scale-0 opacity-0'
-                }`}
-              >
-                <MoonIcon />
-              </div>
-            </div>
-            <span className="sr-only">Toggle theme</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {availableThemes.length > 1 && (
+              <ThemeDropdown theme={theme} onThemeChange={onThemeChange} />
+            )}
+            <DarkModeToggle isDark={isDarkMode} onToggle={onDarkModeToggle} />
+          </div>
         </div>
       </nav>
     </header>
