@@ -12,7 +12,7 @@ interface Particle {
   y: number;
   size: number;
   speedX: number;
-  speedY: number;
+  baseY: number;
   opacity: number;
   life: number;
   maxLife: number;
@@ -27,70 +27,59 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
   const particlesRef = useRef<Particle[]>([]);
   const lastSpawnTime = useRef<number>(0);
 
-  // Get the current theme's muted-foreground color from CSS custom properties
-  const getMutedForegroundColor = (): [number, number, number] => {
-    // Create a temporary element to get the computed muted-foreground color
-    const temp = document.createElement('div');
-    temp.style.color = 'hsl(var(--muted-foreground))';
-    temp.style.visibility = 'hidden';
-    temp.style.position = 'absolute';
-    document.body.appendChild(temp);
+  // Get the current theme's primary color from CSS custom properties
+  const getPrimaryColor = (): [number, number, number] => {
+    // Check what theme is currently active
+    const htmlElement = document.documentElement;
+    const isDark = htmlElement.classList.contains('dark');
     
-    const computedColor = getComputedStyle(temp).color;
-    document.body.removeChild(temp);
+    // Define theme colors directly (converted from OKLCH to RGB)
+    const themeColors: Record<string, { light: [number, number, number]; dark: [number, number, number] }> = {
+      slate: {
+        light: [102, 66, 166] as [number, number, number], // oklch(0.402 0.053 263) converted to RGB
+        dark: [139, 108, 193] as [number, number, number]   // Lighter version for dark mode
+      },
+      green: {
+        light: [34, 139, 34] as [number, number, number],   // Forest green
+        dark: [50, 205, 50] as [number, number, number]     // Lighter green for dark mode
+      },
+      // Add more themes here as needed:
+      // blue: {
+      //   light: [59, 130, 246] as [number, number, number],  // Blue
+      //   dark: [96, 165, 250] as [number, number, number]    // Light blue
+      // },
+      // purple: {
+      //   light: [147, 51, 234] as [number, number, number],  // Purple
+      //   dark: [168, 85, 247] as [number, number, number]    // Light purple
+      // }
+    };
     
-    // Parse RGB values from computed color
-    const rgbMatch = computedColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-    if (rgbMatch) {
-      return [
-        parseInt(rgbMatch[1]),
-        parseInt(rgbMatch[2]),
-        parseInt(rgbMatch[3])
-      ];
-    }
+    // Find which theme is currently active
+    const activeTheme = Object.keys(themeColors).find(theme => 
+      htmlElement.classList.contains(theme)
+    ) || 'slate'; // Default to slate if no theme class found
     
-    // Fallback to a muted gray
-    return [107, 114, 128];
+    const color = isDark 
+      ? themeColors[activeTheme].dark 
+      : themeColors[activeTheme].light;
+    
+    return color;
   };
 
-  // HSL to RGB conversion
-  const hslToRgb = (h: number, s: number, l: number): [number, number, number] => {
-    let r, g, b;
-
-    if (s === 0) {
-      r = g = b = l; // achromatic
-    } else {
-      const hue2rgb = (p: number, q: number, t: number) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-        return p;
-      };
-
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
-    }
-
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-  };
-
-  // Create a new particle
+  // Create a new particle that bounces horizontally
   const createParticle = (canvas: HTMLCanvasElement): Particle => {
-    const maxLife = 120 + Math.random() * 120; // 2-4 seconds at 60fps (slower)
+    // Position particles near the bottom 1/3 of the container
+    const underlineY = canvas.height * 0.7 + (Math.random() - 0.5) * 4; // Bottom third with variance
+    
     return {
-      x: Math.random() * canvas.width,
-      y: canvas.height + 10, // Start below the canvas
-      size: 2 + Math.random() * 3, // Slightly larger base size for gradient rendering
-      speedX: (Math.random() - 0.5) * 1, // Slower horizontal drift
-      speedY: -0.5 - Math.random() * 1, // Slower upward movement
-      opacity: 0.7 + Math.random() * 0.3, // Higher base opacity
+      x: Math.random() * 20, // Start from left side with some variance
+      y: underlineY,
+      size: 1 + Math.random(), // 1-2px size
+      speedX: 0.5 + Math.random() * 0.8, // Speed between 0.5-1.3px per frame
+      baseY: underlineY,
+      opacity: 0.7 + Math.random() * 0.3,
       life: 0,
-      maxLife: maxLife
+      maxLife: 180 + Math.random() * 120 // 3-5 seconds lifespan
     };
   };
 
@@ -101,17 +90,27 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
     for (let i = particles.length - 1; i >= 0; i--) {
       const particle = particles[i];
       
-      // Update position
+      // Move particle horizontally
       particle.x += particle.speedX;
-      particle.y += particle.speedY;
+      
+      // Bounce off edges
+      if (particle.x <= 0 || particle.x >= canvas.width) {
+        particle.speedX = -particle.speedX; // Reverse direction
+        // Add slight Y variance on bounce
+        particle.y = particle.baseY + (Math.random() - 0.5) * 2;
+      }
+      
+      // Keep particle in bounds
+      particle.x = Math.max(0, Math.min(canvas.width, particle.x));
+      
       particle.life++;
       
-      // Fade out more gradually for better visibility
+      // Fade out over lifespan
       const fadeProgress = particle.life / particle.maxLife;
-      particle.opacity = (1 - Math.pow(fadeProgress, 2)) * 0.9; // Quadratic fade-out
+      particle.opacity = (1 - fadeProgress) * 0.8;
       
       // Remove dead particles
-      if (particle.life >= particle.maxLife || particle.y < -10) {
+      if (particle.life >= particle.maxLife) {
         particles.splice(i, 1);
       }
     }
@@ -121,30 +120,20 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
   const renderParticles = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    const [r, g, b] = getMutedForegroundColor();
+    const [r, g, b] = getPrimaryColor();
     const particles = particlesRef.current;
     
     particles.forEach(particle => {
       ctx.save();
       
-      // Create radial gradient for each particle that fades to transparency
-      const gradient = ctx.createRadialGradient(
-        particle.x, particle.y, 0,
-        particle.x, particle.y, particle.size * 2
-      );
+      // Create a subtle glow effect
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.opacity})`;
+      ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${particle.opacity * 0.8})`;
+      ctx.shadowBlur = 2;
       
-      // Center: full opacity primary color
-      gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${particle.opacity})`);
-      // Middle: medium opacity
-      gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${particle.opacity * 0.6})`);
-      // Edge: transparent
-      gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-      
-      ctx.fillStyle = gradient;
-      
-      // Draw the particle circle
+      // Draw the particle
       ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       ctx.fill();
       
       ctx.restore();
@@ -156,28 +145,33 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     
-    if (!canvas || !ctx || !isActive) {
+    if (!canvas || !ctx) {
       animationRef.current = requestAnimationFrame(animate);
       return;
     }
 
-    const currentTime = Date.now();
-    
-    // Spawn new particles periodically (slower rate)
-    if (currentTime - lastSpawnTime.current > 200) { // Every 200ms (slower spawning)
-      if (particlesRef.current.length < 12) { // Slightly fewer particles for cleaner look
-        particlesRef.current.push(createParticle(canvas));
+    if (isActive) {
+      const currentTime = Date.now();
+      
+      // Spawn new particles periodically
+      if (currentTime - lastSpawnTime.current > 200) { // Faster spawning for more particles
+        if (particlesRef.current.length < 16) { // Double the particle count (was 8)
+          particlesRef.current.push(createParticle(canvas));
+        }
+        lastSpawnTime.current = currentTime;
       }
-      lastSpawnTime.current = currentTime;
+      
+      updateParticles(canvas);
+      renderParticles(canvas, ctx);
+    } else {
+      // Clear canvas when inactive
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-    
-    updateParticles(canvas);
-    renderParticles(canvas, ctx);
     
     animationRef.current = requestAnimationFrame(animate);
   };
 
-  // Resize canvas to match container
+  // Resize canvas to match container dimensions
   const resizeCanvas = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -215,6 +209,9 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
     <canvas
       ref={canvasRef}
       className={`pointer-events-none absolute inset-0 ${className}`}
+      style={{
+        zIndex: 10
+      }}
     />
   );
 };

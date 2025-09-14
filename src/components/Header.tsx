@@ -154,21 +154,21 @@ export const Header: React.FC<HeaderProps> = ({ theme, isDarkMode, onThemeChange
   const currentPage = getCurrentPage();
 
   return (
-    <header className="w-full p-4 border-b border-border">
-      <nav className="flex items-center justify-between mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <header className="w-full p-4 border-b border-border overflow-visible">
+      <nav className="flex items-center justify-between mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl overflow-visible">
         <a href="/" aria-label="Home page">
           <LogoIcon />
         </a>
         
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center space-x-8">
+        <div className="flex items-center gap-4 overflow-visible">
+          <div className="hidden md:flex items-center space-x-8 overflow-visible">
             {navLinks.map(link => {
               const isActive = (link.key === 'home' && currentPage === 'home') ||
                               (link.key === 'resume' && currentPage === 'resume') || 
                               (link.key === currentPage);
               
               return (
-                <div key={link.key} className="relative">
+                <div key={link.key} className="relative overflow-visible">
                   <a 
                     href={link.href} 
                     className={`text-sm font-medium transition-colors relative z-10 ${
@@ -180,7 +180,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, isDarkMode, onThemeChange
                     {link.name}
                   </a>
                   {isActive && (
-                    <div className="absolute inset-0 h-full w-full">
+                    <div className="absolute left-0 right-0 top-0 overflow-visible" style={{ height: '150%', bottom: '-50%' }}>
                       <ParticleAnimation isActive={true} className="h-full w-full" />
                     </div>
                   )}
