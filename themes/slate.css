@@ -1,4 +1,4 @@
-:root {
+:root.slate {
   --background: oklch(0.985 0 0);
   --card: oklch(0.985 0 0);
   --popover: oklch(0.985 0 0);
@@ -34,7 +34,7 @@
   --radius: 0rem;
 }
 
-.dark {
+.slate.dark {
   --background: oklch(0.192 0 0);
   --card: oklch(0.192 0 0);
   --popover: oklch(0.192 0 0);

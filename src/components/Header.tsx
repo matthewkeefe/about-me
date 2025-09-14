@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { getAvailableThemes } from '../utils/themes';
+import { ParticleAnimation } from './ParticleAnimation';
 
 interface HeaderProps {
   theme: string;
   isDarkMode: boolean;
   onThemeChange: (theme: string) => void;
   onDarkModeToggle: () => void;
-  variant?: 'main' | 'resume';
 }
 
 const LogoIcon = () => (
@@ -131,37 +131,63 @@ const DarkModeToggle = ({ isDark, onToggle }: { isDark: boolean; onToggle: () =>
   </button>
 );
 
-export const Header: React.FC<HeaderProps> = ({ theme, isDarkMode, onThemeChange, onDarkModeToggle, variant = 'main' }) => {
-  const navLinks = ["Interactive Resume", "Projects", "Music", "Social"];
+export const Header: React.FC<HeaderProps> = ({ theme, isDarkMode, onThemeChange, onDarkModeToggle }) => {
+  const navLinks = [
+    { name: "Home", href: "/", key: "home" },
+    { name: "Interactive Resume", href: "/resume.html", key: "resume" },
+    { name: "Projects", href: "#", key: "projects" },
+    { name: "Music", href: "#", key: "music" },
+    { name: "Social", href: "#", key: "social" }
+  ];
   const availableThemes = getAvailableThemes();
+
+  // Detect current page for highlighting
+  const getCurrentPage = (): string => {
+    const path = window.location.pathname;
+    if (path.includes('resume.html')) return 'resume';
+    if (path.includes('projects.html')) return 'projects';
+    if (path.includes('music.html')) return 'music';
+    if (path.includes('social.html')) return 'social';
+    return 'home'; // Default for index page
+  };
+
+  const currentPage = getCurrentPage();
 
   return (
     <header className="w-full p-4 border-b border-border">
-      <nav className={`flex items-center justify-between mx-auto px-4 sm:px-6 lg:px-8 ${variant === 'main' ? 'max-w-7xl' : 'max-w-6xl'}`}>
-        <a href={variant === 'resume' ? '/' : '#'} aria-label={variant === 'resume' ? 'Home page' : 'Home page'}>
+      <nav className="flex items-center justify-between mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <a href="/" aria-label="Home page">
           <LogoIcon />
         </a>
         
         <div className="flex items-center gap-4">
-          {variant === 'main' && (
-            <div className="hidden md:flex items-center space-x-8">
-              {navLinks.map(link => (
-                <a 
-                  key={link} 
-                  href={link === 'Interactive Resume' ? '/resume.html' : '#'} 
-                  className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
-                >
-                  {link}
-                </a>
-              ))}
-            </div>
-          )}
-          
-          {variant === 'resume' && (
-            <a href="/" className="text-sm text-foreground/70 hover:text-foreground transition-colors">
-              Back
-            </a>
-          )}
+          <div className="hidden md:flex items-center space-x-8">
+            {navLinks.map(link => {
+              const isActive = (link.key === 'home' && currentPage === 'home') ||
+                              (link.key === 'resume' && currentPage === 'resume') || 
+                              (link.key === currentPage);
+              
+              return (
+                <div key={link.key} className="relative">
+                  <a 
+                    href={link.href} 
+                    className={`text-sm font-medium transition-colors relative z-10 ${
+                      isActive 
+                        ? 'text-foreground' 
+                        : 'text-foreground/70 hover:text-foreground'
+                    }`}
+                  >
+                    {link.name}
+                  </a>
+                  {isActive && (
+                    <div className="absolute inset-0 h-full w-full">
+                      <ParticleAnimation isActive={true} className="h-full w-full" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
           
           <div className="flex items-center gap-2">
             {availableThemes.length > 1 && (

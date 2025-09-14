@@ -5,11 +5,11 @@ export type Theme = typeof themes[number];
 export const themeColors: Record<Theme, { light: string; dark: string }> = {
   slate: {
     light: '#ffffff', // White background for light mode
-    dark: '#3f3f46' // Dark background from slate theme
+    dark: '#313339' // Dark background from slate theme
   },
   green: {
     light: '#ffffff', // White background for light mode  
-    dark: '#0f172a' // Dark background for green theme
+    dark: '#303030' // Dark background for green theme
   }
 };
 

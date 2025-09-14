@@ -16,7 +16,7 @@ function ResumeApp() {
   // Separate state for theme name and dark mode
   const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem("theme") as Theme;
-    return savedTheme && ['slate'].includes(savedTheme) ? savedTheme : 'slate';
+    return savedTheme && ['slate', 'green'].includes(savedTheme) ? savedTheme : 'slate';
   });
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -133,7 +133,6 @@ function ResumeApp() {
         isDarkMode={isDarkMode}
         onThemeChange={handleThemeChange} 
         onDarkModeToggle={handleDarkModeToggle}
-        variant="resume" 
       />
 
       <main className="flex-grow py-12">
