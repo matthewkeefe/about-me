@@ -1,26 +1,92 @@
+import "./index.css";
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Header } from "./src/components/Header";
-import { loadTheme, applyTheme, type Theme } from "./src/utils/themes";
+import {
+  loadTheme,
+  applyTheme,
+  getAvailableThemesSync,
+} from "./src/utils/themes";
 
 const Section = ({ title, children }: { title: string; children: any }) => (
-  <section className="mt-8 p-6 rounded-lg bg-card dark:bg-card ring-1 ring-border">
-    <h3 className="text-lg font-semibold text-foreground">
-      {title}
-    </h3>
+  <section className="mt-8 p-6 rounded-lg bg-card dark:bg-card ring-1 ring-border mb-8">
+    <h3 className="text-lg font-semibold text-foreground">{title}</h3>
     <div className="mt-3 text-foreground/80">{children}</div>
   </section>
 );
 
+const PageTitle = ({
+  name,
+  title,
+  children,
+}: {
+  name: string;
+  title: string;
+  children?: React.ReactNode;
+}) => (
+  <div className="relative isolate overflow-hidden bg-card pt-8 sm:pt-16 ">
+    <div className="mx-auto max-w-4xl px-6 lg:px-8">
+      <h1 className="text-4xl font-semibold tracking-tight text-foreground mb-4">
+        {name}
+      </h1>
+      <p className="mt-4 text-lg text-muted-foreground">{title}</p>
+      {children}
+    </div>
+  </div>
+);
+
+// Professional Summary section with blurry background
+const ProfessionalSummaryHero = ({
+  summary,
+  name,
+  title,
+}: {
+  summary: string;
+  name: string;
+  title: string;
+}) => (
+  <div className="relative isolate overflow-hidden bg-card pt-8 sm:pt-16 lg:pt-16">
+    {/* Blurry background effect */}
+    <div
+      aria-hidden="true"
+      className="absolute top-0 left-1/2 -z-10 -translate-x-1/2 blur-3xl xl:-top-6"
+    >
+      <div
+        style={{
+          clipPath:
+            "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+        }}
+        className="aspect-[1155/678] w-[72rem] bg-gradient-to-tr from-primary/30 to-secondary/30 opacity-20 dark:opacity-30"
+      />
+    </div>
+
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="mx-auto max-w-4xl px-6 lg:px-8 pb-8 pt-8 pb-8 rounded-lg ring-1 ring-border mb-8">
+
+          <h2 className="text-xl font-semibold text-foreground mb-4">
+            Professional Summary
+          </h2>
+          <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line mx-auto">
+            {summary}
+          </p>
+
+      </div>
+    </div>
+  </div>
+);
+
 function ResumeApp() {
   // Separate state for theme name and dark mode
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme;
-    return savedTheme && ['slate', 'green'].includes(savedTheme) ? savedTheme : 'slate';
+  const [theme, setTheme] = useState<string>(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const availableThemes = getAvailableThemesSync();
+    return savedTheme && availableThemes.includes(savedTheme)
+      ? savedTheme
+      : availableThemes[0] || "slate";
   });
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const savedDarkMode = localStorage.getItem('darkMode');
+    const savedDarkMode = localStorage.getItem("darkMode");
     return savedDarkMode ? JSON.parse(savedDarkMode) : false;
   });
 
@@ -29,14 +95,14 @@ function ResumeApp() {
       applyTheme(theme, isDarkMode);
       await loadTheme(theme);
       localStorage.setItem("theme", theme);
-      localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+      localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
     };
 
     handleThemeUpdate();
   }, [theme, isDarkMode]);
 
   const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme as Theme);
+    setTheme(newTheme);
   };
 
   const handleDarkModeToggle = () => {
@@ -49,9 +115,11 @@ function ResumeApp() {
 
   // Which group IDs are selected (allow multi-select)
   const [activeGroups, setActiveGroups] = useState<Record<string, boolean>>({});
-  
+
   // Animation state for experience bullets
-  const [animatingBullets, setAnimatingBullets] = useState<Set<string>>(new Set());
+  const [animatingBullets, setAnimatingBullets] = useState<Set<string>>(
+    new Set()
+  );
   const [isFiltering, setIsFiltering] = useState(false);
 
   useEffect(() => {
@@ -99,14 +167,14 @@ function ResumeApp() {
   // Handle animated group toggle
   const handleGroupToggle = (groupId: string) => {
     setIsFiltering(true);
-    
+
     // Brief delay to allow fade out before changing state
     setTimeout(() => {
       setActiveGroups((prev) => ({
         ...prev,
         [groupId]: !prev[groupId],
       }));
-      
+
       // Reset filtering state after a brief moment to trigger fade in
       setTimeout(() => {
         setIsFiltering(false);
@@ -117,7 +185,7 @@ function ResumeApp() {
   // Handle clear all filters with animation
   const handleClearFilters = () => {
     setIsFiltering(true);
-    
+
     setTimeout(() => {
       setActiveGroups({});
       setTimeout(() => {
@@ -128,32 +196,39 @@ function ResumeApp() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      <Header 
-        theme={theme} 
+      <Header
+        theme={theme}
         isDarkMode={isDarkMode}
-        onThemeChange={handleThemeChange} 
+        onThemeChange={handleThemeChange}
         onDarkModeToggle={handleDarkModeToggle}
       />
 
-      <main className="flex-grow py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="rounded-xl p-8 bg-gradient-to-b from-white/60 to-white/30 dark:from-slate-900/60 dark:to-slate-900/40 ring-1 ring-slate-900/5 dark:ring-white/5">
-            <div className="md:flex md:items-center md:justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-                  {resume?.name ?? "Resume"}
-                </h1>
-                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                  {resume?.title ?? ""}{" "}
-                  {resume?.location ? `— ${resume.location}` : ""}
-                </p>
-              </div>
-              <div className="mt-4 md:mt-0" />
-            </div>
+      {/* Page Title Section */}
+      {resume && (
+        <PageTitle
+          name={resume?.name ?? "Resume"}
+          title={resume?.title ?? ""}
+        />
+      )}
 
-            {/* Group cloud */}
-            {skillsData && (
-              <div className="mt-6 flex flex-wrap gap-2">
+      {/* Professional Summary Hero Section */}
+      {resume && (
+        <ProfessionalSummaryHero
+          summary={resume.summary?.professional_summary || ""}
+          name={resume?.name ?? "Resume"}
+          title={resume?.title ?? ""}
+        />
+      )}
+
+      <main className="flex-grow py-4">
+        <div className="max-w-4xl mx-auto px-4">
+          {/* Skills Filter Section */}
+          {skillsData && (
+            <div className="mb-8 p-6 rounded-xl bg-gradient-to-b from-card/60 to-card/30 dark:from-card/60 dark:to-card/40 ring-1 ring-border">
+              <h2 className="text-xl font-semibold text-foreground mb-4">
+                Filter by Skills
+              </h2>
+              <div className="flex flex-wrap gap-2">
                 {skillsData.groups.map((g: any) => {
                   const active = !!activeGroups[g.id];
                   return (
@@ -162,8 +237,8 @@ function ResumeApp() {
                       onClick={() => handleGroupToggle(g.id)}
                       className={`px-3 py-1 rounded-full text-sm font-medium transition ring-1 ${
                         active
-                          ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 ring-slate-900"
-                          : "bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 ring-slate-200 dark:ring-slate-700"
+                          ? "bg-primary text-primary-foreground ring-primary"
+                          : "bg-secondary text-secondary-foreground ring-border hover:bg-secondary/80"
                       }`}
                     >
                       {g.name}
@@ -173,233 +248,235 @@ function ResumeApp() {
                 {/* Clear filters */}
                 <button
                   onClick={handleClearFilters}
-                  className="px-3 py-1 rounded-full text-sm text-slate-600 dark:text-slate-300 ring-1 ring-slate-200 dark:ring-slate-700"
+                  className="px-3 py-1 rounded-full text-sm text-muted-foreground ring-1 ring-border hover:bg-secondary/50"
                 >
                   Clear
                 </button>
               </div>
-            )}
+            </div>
+          )}
 
-            <div className="mt-6 md:grid md:grid-cols-3 md:gap-8">
-              {/* Left side panel */}
-              <aside className="md:col-span-1">
-                {resume && (
-                  <div className="space-y-8">
-                    <Section title="Professional Summary">
-                      <p className="whitespace-pre-line text-sm">
-                        {resume.summary?.professional_summary}
-                      </p>
-                    </Section>
-                    {resume && skillsData && (
-                      <>
-                        <Section title="Key Skills">
-                          <ul className="mt-3 space-y-2">
-                            {(resume.summary?.key_skills || []).map(
-                              (id: string) => (
-                                <li
-                                  key={id}
-                                  className="flex gap-x-3 items-start"
-                                >
-                                  <svg
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    aria-hidden="true"
-                                    className="h-5 w-5 flex-none text-indigo-400 mt-0.5"
-                                  >
-                                    <path
-                                      d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
-                                      clipRule="evenodd"
-                                      fillRule="evenodd"
-                                    />
-                                  </svg>
-                                  <span className="text-sm text-slate-700 dark:text-slate-300">
-                                    {skillIdToName[id] ?? id}
-                                  </span>
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </Section>
-
-                        <Section title="Technical Proficiencies">
-                          <div className="flex flex-wrap gap-2">
-                            {(
-                              resume.summary?.technical_proficiencies || []
-                            ).map((id: string) => (
-                              <span
-                                key={id}
-                                className="px-3 py-1 rounded-full text-sm bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100"
-                              >
-                                {skillIdToName[id] ?? id}
-                              </span>
-                            ))}
-                          </div>
-                        </Section>
-                      </>
-                    )}
-                  </div>
-                )}
-              </aside>
-
-              {/* Right main column */}
-              <div className="md:col-span-2">
-                <Section title="Work Experience">
-                  <div className="space-y-6">
-                    {(resume?.employment || []).map((job: any, ji: number) => {
-                      // For each job, filter experience bullets by activeGroup if set
-                      // Build selected skill id set from chosen groups (multi-select)
-                      const selectedGroupIds = Object.keys(activeGroups).filter(
-                        (k) => activeGroups[k]
-                      );
-                      const selectedSkillIds = new Set<string>();
-                      for (const gid of selectedGroupIds) {
-                        for (const sid of groupIdToSkills[gid] || [])
-                          selectedSkillIds.add(sid);
-                      }
-
-                      const bullets = (job.experience || []).filter(
-                        (e: any) => {
-                          if (selectedSkillIds.size === 0) return true; // no filter active
-                          return (e.tags || []).some((t: string) =>
-                            selectedSkillIds.has(t)
-                          );
-                        }
-                      );
-
-                      if (bullets.length === 0) return null; // hide job if no matching bullets under filter
-
-                      return (
-                        <div
-                          key={ji}
-                          className="p-4 rounded-md bg-white/60 dark:bg-slate-800/60 ring-1 ring-slate-900/5 dark:ring-white/5"
-                        >
-                          <div className="flex items-baseline justify-between">
-                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
-                              {job.title}{" "}
-                              <p className="font-normal text-slate-600 dark:text-slate-300">
-                                @ {job.company}
-                              </p>
-                            </h4>
-                            <span className="text-xs text-slate-500 dark:text-slate-400">
-                              {job.start_date}
-                              {job.end_date ? ` to ${job.end_date}` : ""}
-                            </span>
-                          </div>
-                          <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">
-                            {job.summary}
-                          </p>
-                          <ul className="mt-3 space-y-2">
-                            {bullets.map((b: any, bi: number) => (
-                              <li 
-                                key={bi} 
-                                className={`flex gap-x-3 items-start transition-all duration-300 ease-in-out ${
-                                  isFiltering ? 'animate-fade-out' : 'animate-fade-in'
-                                }`}
-                              >
+          {/* Main Content Grid */}
+          <div className="md:grid md:grid-cols-3 md:gap-8">
+            {/* Left side panel */}
+            <aside className="md:col-span-1">
+              {resume && (
+                <div className="space-y-8">
+                  {resume && skillsData && (
+                    <>
+                      <Section title="Key Skills">
+                        <ul className="mt-3 space-y-2">
+                          {(resume.summary?.key_skills || []).map(
+                            (id: string) => (
+                              <li key={id} className="flex gap-x-3 items-start">
                                 <svg
                                   viewBox="0 0 20 20"
                                   fill="currentColor"
                                   aria-hidden="true"
-                                  className="h-5 w-5 flex-none text-indigo-400 mt-0.5"
+                                  className="h-5 w-5 flex-none text-primary mt-0.5"
                                 >
-                                  <circle cx="10" cy="10" r="3" />
+                                  <path
+                                    d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                                    clipRule="evenodd"
+                                    fillRule="evenodd"
+                                  />
                                 </svg>
-                                <div className="flex-1">
-                                  <span className="text-sm text-slate-700 dark:text-slate-300">
-                                    {b.text}
-                                  </span>
-                                  {/* Skill group pills */}
-                                  {b.tags && b.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                      {(() => {
-                                        // Collect all unique group IDs for this bullet's tags
-                                        const uniqueGroupIds = new Set<string>();
-                                        b.tags.forEach((tagId: string) => {
-                                          const skill = skillsData?.skills?.find((s: any) => s.id === tagId);
-                                          const groupIds = skill?.groups || [];
-                                          groupIds.forEach((groupId: string) => uniqueGroupIds.add(groupId));
-                                        });
-                                        
-                                        // Convert to array and limit to first 3 groups
-                                        return Array.from(uniqueGroupIds).slice(0, 3).map((groupId: string) => {
-                                          const group = skillsData?.groups?.find((g: any) => g.id === groupId);
+                                <span className="text-sm text-muted-foreground">
+                                  {skillIdToName[id] ?? id}
+                                </span>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </Section>
+
+                      <Section title="Technical Proficiencies">
+                        <div className="flex flex-wrap gap-2">
+                          {(resume.summary?.technical_proficiencies || []).map(
+                            (id: string) => (
+                              <span
+                                key={id}
+                                className="px-3 py-1 rounded-full text-sm bg-secondary text-secondary-foreground"
+                              >
+                                {skillIdToName[id] ?? id}
+                              </span>
+                            )
+                          )}
+                        </div>
+                      </Section>
+                    </>
+                  )}
+                </div>
+              )}
+            </aside>
+
+            {/* Right main column */}
+            <div className="md:col-span-2">
+              <Section title="Work Experience">
+                <div className="space-y-6">
+                  {(resume?.employment || []).map((job: any, ji: number) => {
+                    // For each job, filter experience bullets by activeGroup if set
+                    // Build selected skill id set from chosen groups (multi-select)
+                    const selectedGroupIds = Object.keys(activeGroups).filter(
+                      (k) => activeGroups[k]
+                    );
+                    const selectedSkillIds = new Set<string>();
+                    for (const gid of selectedGroupIds) {
+                      for (const sid of groupIdToSkills[gid] || [])
+                        selectedSkillIds.add(sid);
+                    }
+
+                    const bullets = (job.experience || []).filter((e: any) => {
+                      if (selectedSkillIds.size === 0) return true; // no filter active
+                      return (e.tags || []).some((t: string) =>
+                        selectedSkillIds.has(t)
+                      );
+                    });
+
+                    if (bullets.length === 0) return null; // hide job if no matching bullets under filter
+
+                    return (
+                      <div
+                        key={ji}
+                        className="p-4 rounded-md bg-card/60 ring-1 ring-border"
+                      >
+                        <div className="flex items-baseline justify-between">
+                          <h4 className="text-sm font-semibold text-foreground">
+                            {job.title}{" "}
+                            <p className="font-normal text-muted-foreground">
+                              @ {job.company}
+                            </p>
+                          </h4>
+                          <span className="text-xs text-muted-foreground/70">
+                            {job.start_date}
+                            {job.end_date ? ` to ${job.end_date}` : ""}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {job.summary}
+                        </p>
+                        <ul className="mt-3 space-y-2">
+                          {bullets.map((b: any, bi: number) => (
+                            <li
+                              key={bi}
+                              className={`flex gap-x-3 items-start transition-all duration-300 ease-in-out ${
+                                isFiltering
+                                  ? "animate-fade-out"
+                                  : "animate-fade-in"
+                              }`}
+                            >
+                              <svg
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                                className="h-5 w-5 flex-none text-primary mt-0.5"
+                              >
+                                <circle cx="10" cy="10" r="3" />
+                              </svg>
+                              <div className="flex-1">
+                                <span className="text-sm text-muted-foreground">
+                                  {b.text}
+                                </span>
+                                {/* Skill group pills */}
+                                {b.tags && b.tags.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {(() => {
+                                      // Collect all unique group IDs for this bullet's tags
+                                      const uniqueGroupIds = new Set<string>();
+                                      b.tags.forEach((tagId: string) => {
+                                        const skill = skillsData?.skills?.find(
+                                          (s: any) => s.id === tagId
+                                        );
+                                        const groupIds = skill?.groups || [];
+                                        groupIds.forEach((groupId: string) =>
+                                          uniqueGroupIds.add(groupId)
+                                        );
+                                      });
+
+                                      // Convert to array and limit to first 3 groups
+                                      return Array.from(uniqueGroupIds)
+                                        .slice(0, 3)
+                                        .map((groupId: string) => {
+                                          const group =
+                                            skillsData?.groups?.find(
+                                              (g: any) => g.id === groupId
+                                            );
                                           if (!group) return null;
-                                          
+
                                           return (
                                             <span
                                               key={groupId}
-                                              className="px-2 py-0.5 rounded-full text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600"
+                                              className="px-2 py-0.5 rounded-full text-xs bg-secondary/60 text-secondary-foreground border border-border"
                                             >
                                               {group.name}
                                             </span>
                                           );
                                         });
-                                      })()}
-                                    </div>
-                                  )}
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                                    })()}
+                                  </div>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Section>
+
+              {/* Education */}
+              {resume && (resume.education || []).length > 0 && (
+                <Section title="Education">
+                  <div className="space-y-4">
+                    {resume.education.map((e: any, i: number) => (
+                      <div
+                        key={i}
+                        className="p-3 rounded-md bg-card/60 ring-1 ring-border"
+                      >
+                        <div className="flex items-baseline justify-between">
+                          <h4 className="text-sm font-semibold text-foreground">
+                            {e.title}
+                          </h4>
+                          <span className="text-xs text-muted-foreground/70">
+                            {e.start_date} — {e.end_date}
+                          </span>
                         </div>
-                      );
-                    })}
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {e.school}
+                          {e.gpa ? ` • GPA: ${e.gpa}` : ""}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </Section>
+              )}
 
-                {/* Education */}
-                {resume && (resume.education || []).length > 0 && (
-                  <Section title="Education">
-                    <div className="space-y-4">
-                      {resume.education.map((e: any, i: number) => (
-                        <div
-                          key={i}
-                          className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/40 ring-1 ring-slate-900/5 dark:ring-white/5"
-                        >
-                          <div className="flex items-baseline justify-between">
-                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
-                              {e.title}
-                            </h4>
-                            <span className="text-xs text-slate-500 dark:text-slate-400">
-                              {e.start_date} — {e.end_date}
-                            </span>
-                          </div>
-                          <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">
-                            {e.school}
-                            {e.gpa ? ` • GPA: ${e.gpa}` : ""}
-                          </p>
+              {/* Certifications */}
+              {resume && (resume.certifications || []).length > 0 && (
+                <Section title="Certifications">
+                  <div className="space-y-3">
+                    {resume.certifications.map((c: any, i: number) => (
+                      <div
+                        key={i}
+                        className="p-3 rounded-md bg-card/60 ring-1 ring-border"
+                      >
+                        <div className="flex items-baseline justify-between">
+                          <h4 className="text-sm font-semibold text-foreground">
+                            {c.name}
+                          </h4>
+                          <span className="text-xs text-muted-foreground/70">
+                            {c.date}
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                  </Section>
-                )}
-
-                {/* Certifications */}
-                {resume && (resume.certifications || []).length > 0 && (
-                  <Section title="Certifications">
-                    <div className="space-y-3">
-                      {resume.certifications.map((c: any, i: number) => (
-                        <div
-                          key={i}
-                          className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/40 ring-1 ring-slate-900/5 dark:ring-white/5"
-                        >
-                          <div className="flex items-baseline justify-between">
-                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
-                              {c.name}
-                            </h4>
-                            <span className="text-xs text-slate-500 dark:text-slate-400">
-                              {c.date}
-                            </span>
-                          </div>
-                          <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">
-                            {c.issuer} — {c.description}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </Section>
-                )}
-              </div>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {c.issuer} — {c.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+              )}
             </div>
           </div>
         </div>

@@ -2,18 +2,20 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
+import './index.css';
 import {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import { Header } from './src/components/Header';
-import { loadTheme, applyTheme, type Theme } from './src/utils/themes';
+import { loadTheme, applyTheme, getAvailableThemesSync } from './src/utils/themes';
 
 // CloudAnimation removed — using static background instead
 
 function App() {
   // Separate state for theme name and dark mode
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    return savedTheme && ['slate', 'green'].includes(savedTheme) ? savedTheme : 'slate';
+  const [theme, setTheme] = useState<string>(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const availableThemes = getAvailableThemesSync();
+    return savedTheme && availableThemes.includes(savedTheme) ? savedTheme : availableThemes[0] || 'slate';
   });
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -36,7 +38,7 @@ function App() {
   }, [theme, isDarkMode]);
   
   const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme as Theme);
+    setTheme(newTheme);
   };
 
   const handleDarkModeToggle = () => {

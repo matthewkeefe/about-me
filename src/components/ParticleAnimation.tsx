@@ -29,12 +29,51 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
 
   // Get the current theme's primary color from CSS custom properties
   const getPrimaryColor = (): [number, number, number] => {
-    // Check what theme is currently active
+    // First, try to get the color using a more robust CSS approach
+    const getRGBFromCSS = (): [number, number, number] | null => {
+      // Create a test element that inherits all theme styles
+      const temp = document.createElement('div');
+      temp.style.position = 'absolute';
+      temp.style.visibility = 'hidden';
+      temp.style.pointerEvents = 'none';
+      
+      // Apply primary color via CSS custom property
+      temp.style.backgroundColor = 'hsl(var(--primary))';
+      document.body.appendChild(temp);
+      
+      // Force a style recalculation
+      temp.offsetHeight;
+      
+      const computedStyle = getComputedStyle(temp);
+      const bgColor = computedStyle.backgroundColor;
+      
+      document.body.removeChild(temp);
+      
+      // Parse the RGB values
+      const rgbMatch = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (rgbMatch && rgbMatch[1] !== '0' && rgbMatch[2] !== '0' && rgbMatch[3] !== '0') {
+        return [
+          parseInt(rgbMatch[1]),
+          parseInt(rgbMatch[2]),
+          parseInt(rgbMatch[3])
+        ];
+      }
+      
+      return null;
+    };
+    
+    // Try CSS approach first
+    const cssColor = getRGBFromCSS();
+    if (cssColor) {
+      return cssColor;
+    }
+    
+    // Fallback to theme detection if CSS approach fails
     const htmlElement = document.documentElement;
     const isDark = htmlElement.classList.contains('dark');
     
-    // Define theme colors directly (converted from OKLCH to RGB)
-    const themeColors: Record<string, { light: [number, number, number]; dark: [number, number, number] }> = {
+    // Define theme colors as fallback (converted from OKLCH to RGB)
+    const fallbackColors: Record<string, { light: [number, number, number]; dark: [number, number, number] }> = {
       slate: {
         light: [102, 66, 166] as [number, number, number], // oklch(0.402 0.053 263) converted to RGB
         dark: [139, 108, 193] as [number, number, number]   // Lighter version for dark mode
@@ -43,27 +82,17 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
         light: [34, 139, 34] as [number, number, number],   // Forest green
         dark: [50, 205, 50] as [number, number, number]     // Lighter green for dark mode
       },
-      // Add more themes here as needed:
-      // blue: {
-      //   light: [59, 130, 246] as [number, number, number],  // Blue
-      //   dark: [96, 165, 250] as [number, number, number]    // Light blue
-      // },
-      // purple: {
-      //   light: [147, 51, 234] as [number, number, number],  // Purple
-      //   dark: [168, 85, 247] as [number, number, number]    // Light purple
-      // }
+      // Future themes can be added here
     };
     
     // Find which theme is currently active
-    const activeTheme = Object.keys(themeColors).find(theme => 
+    const activeTheme = Object.keys(fallbackColors).find(theme => 
       htmlElement.classList.contains(theme)
-    ) || 'slate'; // Default to slate if no theme class found
+    ) || 'slate';
     
-    const color = isDark 
-      ? themeColors[activeTheme].dark 
-      : themeColors[activeTheme].light;
-    
-    return color;
+    return isDark 
+      ? fallbackColors[activeTheme].dark 
+      : fallbackColors[activeTheme].light;
   };
 
   // Create a new particle that bounces horizontally

@@ -1,22 +1,64 @@
 // Theme utilities for dynamic theme loading
-export const themes = ['slate', 'green'] as const;
-export type Theme = typeof themes[number];
 
-export const themeColors: Record<Theme, { light: string; dark: string }> = {
+// Auto-detect available themes by checking which CSS files exist
+// This function dynamically discovers themes from the themes/ folder
+export const getAvailableThemes = async (): Promise<string[]> => {
+  const knownThemes = ['slate', 'green', 'indigo']; // Add new themes here
+  const availableThemes: string[] = [];
+  
+  // Test which theme CSS files actually exist
+  for (const theme of knownThemes) {
+    try {
+      const response = await fetch(`/themes/${theme}.css`, { method: 'HEAD' });
+      if (response.ok) {
+        availableThemes.push(theme);
+      }
+    } catch {
+      // Theme file doesn't exist, skip it
+    }
+  }
+  
+  return availableThemes.length > 0 ? availableThemes : ['default'];
+};
+
+// Generate display names automatically: 'indigo' -> 'Indigo', 'default' -> 'Default'
+export const getThemeDisplayName = (themeName: string): string => {
+  return themeName.charAt(0).toUpperCase() + themeName.slice(1);
+};
+
+// For backwards compatibility, export a synchronous version for immediate use
+export const getAvailableThemesSync = (): string[] => {
+  return ['slate', 'green', 'indigo']; // Keep in sync with knownThemes above
+};
+
+export type Theme = string; // Make this more flexible to support any theme name
+
+export const themeColors: Record<string, { light: string; dark: string }> = {
   slate: {
-    light: '#ffffff', // White background for light mode
-    dark: '#313339' // Dark background from slate theme
+    light: '#efefef',
+    dark: '#313339'
   },
   green: {
-    light: '#ffffff', // White background for light mode  
-    dark: '#303030' // Dark background for green theme
+    light: '#efefef',
+    dark: '#303030'
+  },
+  indigo: {
+    light: '#efefef',
+    dark: '#303030'
+  },
+  default: {
+    light: '#ffffff',
+    dark: '#000000'
   }
 };
 
-export const loadTheme = async (themeName: Theme) => {
+export const loadTheme = async (themeName: string) => {
   // Remove existing theme stylesheets
   const existingThemes = document.querySelectorAll('link[data-theme]');
   existingThemes.forEach(link => link.remove());
+  
+  // Skip loading for default theme (uses base CSS)
+  if (themeName === 'default') return;
   
   // Load custom theme CSS file
   const link = document.createElement('link');
@@ -26,15 +68,18 @@ export const loadTheme = async (themeName: Theme) => {
   document.head.appendChild(link);
 };
 
-export const applyTheme = (theme: Theme, isDarkMode: boolean = false) => {
+export const applyTheme = (theme: string, isDarkMode: boolean = false) => {
   const root = document.documentElement;
+  const knownThemes = ['slate', 'green', 'indigo']; // Keep in sync with above
   
   // Remove all theme classes and dark class
-  themes.forEach(t => root.classList.remove(t));
+  knownThemes.forEach(t => root.classList.remove(t));
   root.classList.remove('dark');
   
-  // Add current theme class
-  root.classList.add(theme);
+  // Add current theme class (skip for default)
+  if (theme !== 'default') {
+    root.classList.add(theme);
+  }
   
   // Add dark class if dark mode is enabled
   if (isDarkMode) {
@@ -43,13 +88,8 @@ export const applyTheme = (theme: Theme, isDarkMode: boolean = false) => {
   
   // Update meta theme-color for mobile
   const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-  if (metaThemeColor) {
+  if (metaThemeColor && themeColors[theme]) {
     const colorValue = themeColors[theme][isDarkMode ? 'dark' : 'light'];
     metaThemeColor.setAttribute('content', colorValue);
   }
-};
-
-// Helper to get available themes (color schemes only, no dark/light variants)
-export const getAvailableThemes = (): Theme[] => {
-  return ['slate', 'green']; // Add more as you create theme files
 };

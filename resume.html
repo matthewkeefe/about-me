@@ -7,7 +7,6 @@
   <title>Matthew Keefe — Interactive Resume</title>
   <link rel="stylesheet" href="/index.css">
   <link rel="icon" type="image/x-icon" href="/assets/mk-clouds-favicon.svg" />
-  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     // Clear old theme settings on first load after refactor
     if (!localStorage.getItem('themeSystemV2')) {
@@ -22,12 +21,21 @@
       const savedDarkMode = localStorage.getItem('darkMode');
       const isDarkMode = savedDarkMode ? JSON.parse(savedDarkMode) : false;
       
-      // Apply theme class (always slate for now)
+      // Apply theme class
       document.documentElement.classList.add(savedTheme);
       
       // Apply dark mode if enabled
       if (isDarkMode) {
         document.documentElement.classList.add('dark');
+      }
+      
+      // Load theme CSS file immediately
+      if (savedTheme !== 'default') {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `/themes/${savedTheme}.css`;
+        link.setAttribute('data-theme', savedTheme);
+        document.head.appendChild(link);
       }
       
       // Update meta theme-color
@@ -39,84 +47,6 @@
       }
     })();
   </script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-          },
-          colors: {
-            border: "hsl(var(--border))",
-            input: "hsl(var(--input))",
-            ring: "hsl(var(--ring))",
-            background: "var(--background)",
-            foreground: "var(--foreground)",
-            primary: {
-              DEFAULT: "var(--primary)",
-              foreground: "var(--primary-foreground)",
-            },
-            secondary: {
-              DEFAULT: "var(--secondary)",
-              foreground: "var(--secondary-foreground)",
-            },
-            destructive: {
-              DEFAULT: "var(--destructive)",
-              foreground: "var(--destructive-foreground)",
-            },
-            muted: {
-              DEFAULT: "var(--muted)",
-              foreground: "var(--muted-foreground)",
-            },
-            accent: {
-              DEFAULT: "var(--accent)",
-              foreground: "var(--accent-foreground)",
-            },
-            popover: {
-              DEFAULT: "var(--popover)",
-              foreground: "var(--popover-foreground)",
-            },
-            card: {
-              DEFAULT: "var(--card)",
-              foreground: "var(--card-foreground)",
-            },
-          },
-        },
-      },
-    }
-  </script>
-  <style>
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      to {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-    }
-    
-    .animate-fade-in {
-      animation: fadeIn 0.3s ease-in-out forwards;
-    }
-    
-    .animate-fade-out {
-      animation: fadeOut 0.3s ease-in-out forwards;
-    }
-  </style>
 </head>
 <body class="min-h-screen">
   <div id="root"></div>

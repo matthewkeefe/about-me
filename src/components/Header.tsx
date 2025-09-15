@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { getAvailableThemes } from '../utils/themes';
+import { getAvailableThemesSync, getThemeDisplayName } from '../utils/themes';
 import { ParticleAnimation } from './ParticleAnimation';
 
 interface HeaderProps {
@@ -42,16 +42,10 @@ const ThemeDropdown = ({ theme, onThemeChange }: { theme: string; onThemeChange:
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Get available themes from utility
-  const availableThemes = getAvailableThemes();
+  const availableThemes = getAvailableThemesSync();
   
   // Show only alternative themes (not the current one)
   const alternativeThemes = availableThemes.filter(t => t !== theme);
-  
-  // Display names for themes
-  const themeDisplayNames: Record<string, string> = {
-    slate: 'Slate',
-    green: 'Green'
-  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -74,7 +68,7 @@ const ThemeDropdown = ({ theme, onThemeChange }: { theme: string; onThemeChange:
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        {themeDisplayNames[theme] || theme}
+        {getThemeDisplayName(theme)}
         <ChevronDownIcon />
       </button>
 
@@ -90,7 +84,7 @@ const ThemeDropdown = ({ theme, onThemeChange }: { theme: string; onThemeChange:
                 }}
                 className="block w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground text-popover-foreground"
               >
-                {themeDisplayNames[themeName] || themeName}
+                {getThemeDisplayName(themeName)}
               </button>
             ))}
           </div>
@@ -139,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, isDarkMode, onThemeChange
     { name: "Music", href: "#", key: "music" },
     { name: "Social", href: "#", key: "social" }
   ];
-  const availableThemes = getAvailableThemes();
+  const availableThemes = getAvailableThemesSync();
 
   // Detect current page for highlighting
   const getCurrentPage = (): string => {
