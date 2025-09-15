@@ -60,9 +60,8 @@ useEffect(() => {
 ```
 themes/
 ├── slate.css     /* shadcn generated theme with light/dark variants */
-├── purple.css    /* future themes with light/dark variants */
-├── blue.css      /* future themes with light/dark variants */
-└── green.css     /* future themes with light/dark variants */
+├── indigo.css    /* future themes with light/dark variants */
+└── forest.css     /* future themes with light/dark variants */
 
 /* Example: themes/slate.css */
 :root.slate {
@@ -143,9 +142,9 @@ const DarkModeToggle = ({ isDark, onToggle }) => (
 ```tsx
 // For build-time optimization, you can also use dynamic imports
 const themeModules = {
-  purple: () => import('../themes/purple.css'),
-  blue: () => import('../themes/blue.css'),
-  green: () => import('../themes/green.css'),
+  slate: () => import('../themes/slate.css'),
+  indigo: () => import('../themes/indigo.css'),
+  forest: () => import('../themes/green.css'),
 };
 
 const loadTheme = async (themeName: string) => {

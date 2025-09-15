@@ -45,7 +45,7 @@ const ProfessionalSummaryHero = ({
   name: string;
   title: string;
 }) => (
-  <div className="relative isolate overflow-hidden bg-card pt-8 sm:pt-16 lg:pt-16">
+  <div className="relative isolate overflow-hidden bg-card pt-8 sm:pt-8 lg:pt-8">
     {/* Blurry background effect */}
     <div
       aria-hidden="true"
@@ -206,8 +206,8 @@ function ResumeApp() {
       {/* Page Title Section */}
       {resume && (
         <PageTitle
-          name={resume?.name ?? "Resume"}
-          title={resume?.title ?? ""}
+          name={resume?.name ?? "Matthew Keefe"}
+          title={resume?.title ?? "Resume"}
         />
       )}
 

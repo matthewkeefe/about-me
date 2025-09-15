@@ -3,7 +3,7 @@
 // Auto-detect available themes by checking which CSS files exist
 // This function dynamically discovers themes from the themes/ folder
 export const getAvailableThemes = async (): Promise<string[]> => {
-  const knownThemes = ['slate', 'green', 'indigo']; // Add new themes here
+  const knownThemes = ['slate', 'forest', 'indigo']; // Add new themes here
   const availableThemes: string[] = [];
   
   // Test which theme CSS files actually exist
@@ -28,7 +28,7 @@ export const getThemeDisplayName = (themeName: string): string => {
 
 // For backwards compatibility, export a synchronous version for immediate use
 export const getAvailableThemesSync = (): string[] => {
-  return ['slate', 'green', 'indigo']; // Keep in sync with knownThemes above
+  return ['slate', 'forest', 'indigo']; // Keep in sync with knownThemes above
 };
 
 export type Theme = string; // Make this more flexible to support any theme name
@@ -38,7 +38,7 @@ export const themeColors: Record<string, { light: string; dark: string }> = {
     light: '#efefef',
     dark: '#313339'
   },
-  green: {
+  forest: {
     light: '#efefef',
     dark: '#303030'
   },
@@ -70,7 +70,7 @@ export const loadTheme = async (themeName: string) => {
 
 export const applyTheme = (theme: string, isDarkMode: boolean = false) => {
   const root = document.documentElement;
-  const knownThemes = ['slate', 'green', 'indigo']; // Keep in sync with above
+  const knownThemes = ['slate', 'forest', 'indigo']; // Keep in sync with above
   
   // Remove all theme classes and dark class
   knownThemes.forEach(t => root.classList.remove(t));

@@ -1,4 +1,4 @@
-:root.green {
+:root.forest {
   --background: #f0fdf4;
   --card: #f0fdf4;
   --popover: #f0fdf4;
@@ -34,7 +34,7 @@
   --radius: 0.5rem;
 }
 
-.green.dark {
+.forest.dark {
   --background: #121815;
   --card: #121815;
   --popover: #121815;
@@ -54,7 +54,7 @@
   --accent-foreground: #f0fdf4;
   --sidebar-accent-foreground: #f0fdf4;
   --muted: #166534;
-  --muted-foreground: #4ade80;
+  --muted-foreground: #a9cfb7;
   --destructive: #991b1b;
   --destructive-foreground: #f8fafc;
   --border: #166534;
@@ -70,13 +70,13 @@
 }
 
 /* Apply green theme styles to body */
-html.green body {
+html.forest body {
   background-color: var(--background);
   color: var(--foreground);
 }
 
 /* Apply dark mode styles */
-html.green.dark body {
+html.forest.dark body {
   background-color: var(--background);
   color: var(--foreground);
 }

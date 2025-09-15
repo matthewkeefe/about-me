@@ -3,10 +3,10 @@
   --card: #f0f9ff;
   --popover: #f0f9ff;
   --sidebar: #f0f9ff;
-  --foreground: #1c1733;
-  --card-foreground: #1c1733;
-  --popover-foreground: #1c1733;
-  --sidebar-foreground: #1c1733;
+  --foreground: #100c25;
+  --card-foreground: #100c25;
+  --popover-foreground: #100c25;
+  --sidebar-foreground: #100c25;
   --primary: #3b82f6;
   --sidebar-primary: #3b82f6;
   --primary-foreground: #ffffff;
@@ -35,18 +35,18 @@
 }
 
 .indigo.dark {
-  --background: #1c1733;
-  --card: #1c1733;
-  --popover: #1c1733;
-  --sidebar: #1c1733;
+  --background: #100c25;
+  --card: #100c25;
+  --popover: #100c25;
+  --sidebar: #100c25;
   --foreground: #f0f9ff;
   --card-foreground: #f0f9ff;
   --popover-foreground: #f0f9ff;
   --sidebar-foreground: #f0f9ff;
   --primary: #60a5fa;
   --sidebar-primary: #60a5fa;
-  --primary-foreground: #1c1733;
-  --sidebar-primary-foreground: #1c1733;
+  --primary-foreground: #100c25;
+  --sidebar-primary-foreground: #100c25;
   --secondary: #0f2365;
   --accent: #0f2365;
   --sidebar-accent: #0f2365;

@@ -78,7 +78,7 @@ export const ParticleAnimation: React.FC<ParticleAnimationProps> = ({
         light: [102, 66, 166] as [number, number, number], // oklch(0.402 0.053 263) converted to RGB
         dark: [139, 108, 193] as [number, number, number]   // Lighter version for dark mode
       },
-      green: {
+      forest: {
         light: [34, 139, 34] as [number, number, number],   // Forest green
         dark: [50, 205, 50] as [number, number, number]     // Lighter green for dark mode
       },
