@@ -7,9 +7,12 @@ import {
   applyTheme,
   getAvailableThemesSync,
 } from "./src/utils/themes";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 const Section = ({ title, children }: { title: string; children: any }) => (
-  <section className="mt-8 p-6 rounded-lg bg-card dark:bg-card ring-1 ring-border mb-8">
+  <section className="mt-8 p-6 rounded-lg bg-card dark:bg-card mb-8">
     <h3 className="text-lg font-semibold text-foreground">{title}</h3>
     <div className="mt-3 text-foreground/80">{children}</div>
   </section>
@@ -61,7 +64,7 @@ const ProfessionalSummaryHero = ({
     </div>
 
     <div className="max-w-4xl mx-auto px-4">
-      <div className="mx-auto max-w-4xl px-6 lg:px-8 pb-8 pt-8 pb-8 rounded-lg ring-1 ring-border mb-8">
+  <div className="mx-auto max-w-4xl px-6 lg:px-8 pt-8 pb-8 rounded-lg ring-1 ring-border mb-8">
 
           <h2 className="text-xl font-semibold text-foreground mb-4">
             Professional Summary
@@ -113,6 +116,13 @@ function ResumeApp() {
   const [resume, setResume] = useState<any | null>(null);
   const [skillsData, setSkillsData] = useState<any | null>(null);
 
+  // Markdown mode support
+  const [markdown, setMarkdown] = useState<string | null>(null);
+  const isMarkdownMode = (() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("md") === "1";
+  })();
+
   // Which group IDs are selected (allow multi-select)
   const [activeGroups, setActiveGroups] = useState<Record<string, boolean>>({});
 
@@ -123,9 +133,19 @@ function ResumeApp() {
   const [isFiltering, setIsFiltering] = useState(false);
 
   useEffect(() => {
-    // Fetch content JSON files
+    // Fetch content JSON files or Markdown based on mode
     const load = async () => {
       try {
+        if (isMarkdownMode) {
+          const resMd = await fetch("/content/generated/resume.md");
+          if (!resMd.ok) return;
+          let mdText = await resMd.text();
+          // Clean up mammoth's empty anchor id tags like: <a id="..."></a>
+          // Use RegExp constructor to avoid TSX/esbuild parsing issues with </a> in regex literals
+          mdText = mdText.replace(new RegExp(String.raw`<a id="[^"]*"><\/a>`, "g"), "");
+          setMarkdown(mdText);
+          return; // skip JSON loads
+        }
         const [resSkills, resResume] = await Promise.all([
           fetch("/content/skills.json"),
           fetch("/content/resume.json"),
@@ -136,12 +156,11 @@ function ResumeApp() {
         setSkillsData(skillsJson);
         setResume(resumeJson);
       } catch (e) {
-        // ignore for now
-        console.error("Failed to load resume or skills", e);
+        console.error("Failed to load resume, skills, or markdown", e);
       }
     };
     load();
-  }, []);
+  }, [isMarkdownMode]);
 
   // Derived maps for quick lookup
   const skillIdToName = React.useMemo(() => {
@@ -203,284 +222,321 @@ function ResumeApp() {
         onDarkModeToggle={handleDarkModeToggle}
       />
 
-      {/* Page Title Section */}
-      {resume && (
-        <PageTitle
-          name={resume?.name ?? "Matthew Keefe"}
-          title={resume?.title ?? "Resume"}
-        />
-      )}
-
-      {/* Professional Summary Hero Section */}
-      {resume && (
-        <ProfessionalSummaryHero
-          summary={resume.summary?.professional_summary || ""}
-          name={resume?.name ?? "Resume"}
-          title={resume?.title ?? ""}
-        />
-      )}
-
-      <main className="flex-grow py-4">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Skills Filter Section */}
-          {skillsData && (
-            <div className="mb-8 p-6 rounded-xl bg-gradient-to-b from-card/60 to-card/30 dark:from-card/60 dark:to-card/40 ring-1 ring-border">
-              <h2 className="text-xl font-semibold text-foreground mb-4">
-                Filter by Skills
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {skillsData.groups.map((g: any) => {
-                  const active = !!activeGroups[g.id];
-                  return (
-                    <button
-                      key={g.id}
-                      onClick={() => handleGroupToggle(g.id)}
-                      className={`px-3 py-1 rounded-full text-sm font-medium transition ring-1 ${
-                        active
-                          ? "bg-primary text-primary-foreground ring-primary"
-                          : "bg-secondary text-secondary-foreground ring-border hover:bg-secondary/80"
-                      }`}
-                    >
-                      {g.name}
-                    </button>
-                  );
-                })}
-                {/* Clear filters */}
-                <button
-                  onClick={handleClearFilters}
-                  className="px-3 py-1 rounded-full text-sm text-muted-foreground ring-1 ring-border hover:bg-secondary/50"
-                >
-                  Clear
-                </button>
-              </div>
+      {/* Markdown mode simple renderer */}
+      {isMarkdownMode && (
+        <main className="flex-grow py-4">
+          <div className="max-w-3xl mx-auto px-4">
+            <div className="mb-4 text-right">
+              <a
+                href="/resume.html"
+                className="text-sm text-primary hover:underline"
+                title="Switch to interactive view"
+              >
+                Switch to interactive view
+              </a>
             </div>
-          )}
-
-          {/* Main Content Grid */}
-          <div className="md:grid md:grid-cols-3 md:gap-8">
-            {/* Left side panel */}
-            <aside className="md:col-span-1">
-              {resume && (
-                <div className="space-y-8">
-                  {resume && skillsData && (
-                    <>
-                      <Section title="Key Skills">
-                        <ul className="mt-3 space-y-2">
-                          {(resume.summary?.key_skills || []).map(
-                            (id: string) => (
-                              <li key={id} className="flex gap-x-3 items-start">
-                                <svg
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                  aria-hidden="true"
-                                  className="h-5 w-5 flex-none text-primary mt-0.5"
-                                >
-                                  <path
-                                    d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
-                                    clipRule="evenodd"
-                                    fillRule="evenodd"
-                                  />
-                                </svg>
-                                <span className="text-sm text-muted-foreground">
-                                  {skillIdToName[id] ?? id}
-                                </span>
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      </Section>
-
-                      <Section title="Technical Proficiencies">
-                        <div className="flex flex-wrap gap-2">
-                          {(resume.summary?.technical_proficiencies || []).map(
-                            (id: string) => (
-                              <span
-                                key={id}
-                                className="px-3 py-1 rounded-full text-sm bg-secondary text-secondary-foreground"
-                              >
-                                {skillIdToName[id] ?? id}
-                              </span>
-                            )
-                          )}
-                        </div>
-                      </Section>
-                    </>
-                  )}
-                </div>
-              )}
-            </aside>
-
-            {/* Right main column */}
-            <div className="md:col-span-2">
-              <Section title="Work Experience">
-                <div className="space-y-6">
-                  {(resume?.employment || []).map((job: any, ji: number) => {
-                    // For each job, filter experience bullets by activeGroup if set
-                    // Build selected skill id set from chosen groups (multi-select)
-                    const selectedGroupIds = Object.keys(activeGroups).filter(
-                      (k) => activeGroups[k]
-                    );
-                    const selectedSkillIds = new Set<string>();
-                    for (const gid of selectedGroupIds) {
-                      for (const sid of groupIdToSkills[gid] || [])
-                        selectedSkillIds.add(sid);
-                    }
-
-                    const bullets = (job.experience || []).filter((e: any) => {
-                      if (selectedSkillIds.size === 0) return true; // no filter active
-                      return (e.tags || []).some((t: string) =>
-                        selectedSkillIds.has(t)
-                      );
-                    });
-
-                    if (bullets.length === 0) return null; // hide job if no matching bullets under filter
-
-                    return (
-                      <div
-                        key={ji}
-                        className="p-4 rounded-md bg-card/60 ring-1 ring-border"
-                      >
-                        <div className="flex items-baseline justify-between">
-                          <h4 className="text-sm font-semibold text-foreground">
-                            {job.title}{" "}
-                            <p className="font-normal text-muted-foreground">
-                              @ {job.company}
-                            </p>
-                          </h4>
-                          <span className="text-xs text-muted-foreground/70">
-                            {job.start_date}
-                            {job.end_date ? ` to ${job.end_date}` : ""}
-                          </span>
-                        </div>
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          {job.summary}
-                        </p>
-                        <ul className="mt-3 space-y-2">
-                          {bullets.map((b: any, bi: number) => (
-                            <li
-                              key={bi}
-                              className={`flex gap-x-3 items-start transition-all duration-300 ease-in-out ${
-                                isFiltering
-                                  ? "animate-fade-out"
-                                  : "animate-fade-in"
-                              }`}
-                            >
-                              <svg
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                                className="h-5 w-5 flex-none text-primary mt-0.5"
-                              >
-                                <circle cx="10" cy="10" r="3" />
-                              </svg>
-                              <div className="flex-1">
-                                <span className="text-sm text-muted-foreground">
-                                  {b.text}
-                                </span>
-                                {/* Skill group pills */}
-                                {b.tags && b.tags.length > 0 && (
-                                  <div className="flex flex-wrap gap-1 mt-1">
-                                    {(() => {
-                                      // Collect all unique group IDs for this bullet's tags
-                                      const uniqueGroupIds = new Set<string>();
-                                      b.tags.forEach((tagId: string) => {
-                                        const skill = skillsData?.skills?.find(
-                                          (s: any) => s.id === tagId
-                                        );
-                                        const groupIds = skill?.groups || [];
-                                        groupIds.forEach((groupId: string) =>
-                                          uniqueGroupIds.add(groupId)
-                                        );
-                                      });
-
-                                      // Convert to array and limit to first 3 groups
-                                      return Array.from(uniqueGroupIds)
-                                        .slice(0, 3)
-                                        .map((groupId: string) => {
-                                          const group =
-                                            skillsData?.groups?.find(
-                                              (g: any) => g.id === groupId
-                                            );
-                                          if (!group) return null;
-
-                                          return (
-                                            <span
-                                              key={groupId}
-                                              className="px-2 py-0.5 rounded-full text-xs bg-secondary/60 text-secondary-foreground border border-border"
-                                            >
-                                              {group.name}
-                                            </span>
-                                          );
-                                        });
-                                    })()}
-                                  </div>
-                                )}
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Section>
-
-              {/* Education */}
-              {resume && (resume.education || []).length > 0 && (
-                <Section title="Education">
-                  <div className="space-y-4">
-                    {resume.education.map((e: any, i: number) => (
-                      <div
-                        key={i}
-                        className="p-3 rounded-md bg-card/60 ring-1 ring-border"
-                      >
-                        <div className="flex items-baseline justify-between">
-                          <h4 className="text-sm font-semibold text-foreground">
-                            {e.title}
-                          </h4>
-                          <span className="text-xs text-muted-foreground/70">
-                            {e.start_date} — {e.end_date}
-                          </span>
-                        </div>
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          {e.school}
-                          {e.gpa ? ` • GPA: ${e.gpa}` : ""}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </Section>
-              )}
-
-              {/* Certifications */}
-              {resume && (resume.certifications || []).length > 0 && (
-                <Section title="Certifications">
-                  <div className="space-y-3">
-                    {resume.certifications.map((c: any, i: number) => (
-                      <div
-                        key={i}
-                        className="p-3 rounded-md bg-card/60 ring-1 ring-border"
-                      >
-                        <div className="flex items-baseline justify-between">
-                          <h4 className="text-sm font-semibold text-foreground">
-                            {c.name}
-                          </h4>
-                          <span className="text-xs text-muted-foreground/70">
-                            {c.date}
-                          </span>
-                        </div>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {c.issuer} — {c.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </Section>
-              )}
+            <div className="prose dark:prose-invert max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                {markdown || ""}
+              </ReactMarkdown>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
+      )}
+
+      {/* Existing interactive mode */}
+      {!isMarkdownMode && (
+        <>
+          {/* Page Title Section */}
+          {resume && (
+            <PageTitle
+              name={resume?.name ?? "Matthew Keefe"}
+              title={resume?.title ?? "Resume"}
+            >
+              <div className="mt-2">
+                <a
+                  href="/resume.html?md=1"
+                  className="text-sm text-primary hover:underline"
+                  title="View Markdown version"
+                >
+                  View Markdown version
+                </a>
+              </div>
+            </PageTitle>
+          )}
+
+          {/* Professional Summary Hero Section */}
+          {resume && (
+            <ProfessionalSummaryHero
+              summary={resume.summary?.professional_summary || ""}
+              name={resume?.name ?? "Resume"}
+              title={resume?.title ?? ""}
+            />
+          )}
+
+          <main className="flex-grow py-4">
+            <div className="max-w-4xl mx-auto px-4">
+              {/* Skills Filter Section */}
+              {skillsData && (
+                <div className="mb-8 p-6 rounded-xl bg-gradient-to-b from-card/60 to-card/30 dark:from-card/60 dark:to-card/40 ring-1 ring-border">
+                  <h2 className="text-xl font-semibold text-foreground mb-4">
+                    Filter by Skills
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
+                    {skillsData.groups.map((g: any) => {
+                      const active = !!activeGroups[g.id];
+                      return (
+                        <button
+                          key={g.id}
+                          onClick={() => handleGroupToggle(g.id)}
+                          className={`px-3 py-1 rounded-full text-sm font-medium transition ring-1 ${
+                            active
+                              ? "bg-primary text-primary-foreground ring-primary"
+                              : "bg-secondary text-secondary-foreground ring-border hover:bg-secondary/80"
+                          }`}
+                        >
+                          {g.name}
+                        </button>
+                      );
+                    })}
+                    {/* Clear filters */}
+                    <button
+                      onClick={handleClearFilters}
+                      className="px-3 py-1 rounded-full text-sm text-muted-foreground ring-1 ring-border hover:bg-secondary/50"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Main Content Grid */}
+              <div className="md:grid md:grid-cols-3 md:gap-8">
+                {/* Left side panel */}
+                <aside className="md:col-span-1">
+                  {resume && (
+                    <div className="space-y-8">
+                      {resume && skillsData && (
+                        <>
+                          <Section title="Key Skills">
+                            <ul className="mt-3 space-y-2">
+                              {(resume.summary?.key_skills || []).map(
+                                (id: string) => (
+                                  <li key={id} className="flex gap-x-3 items-start">
+                                    <svg
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                      aria-hidden="true"
+                                      className="h-5 w-5 flex-none text-primary mt-0.5"
+                                    >
+                                      <path
+                                        d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                                        clipRule="evenodd"
+                                        fillRule="evenodd"
+                                      />
+                                    </svg>
+                                    <span className="text-sm text-muted-foreground">
+                                      {skillIdToName[id] ?? id}
+                                    </span>
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </Section>
+
+                          <Section title="Technical Proficiencies">
+                            <div className="flex flex-wrap gap-2">
+                              {(resume.summary?.technical_proficiencies || []).map(
+                                (id: string) => (
+                                  <span
+                                    key={id}
+                                    className="px-3 py-1 rounded-full text-sm bg-secondary text-secondary-foreground"
+                                  >
+                                    {skillIdToName[id] ?? id}
+                                  </span>
+                                )
+                              )}
+                            </div>
+                          </Section>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </aside>
+
+                {/* Right main column */}
+                <div className="md:col-span-2">
+                  <Section title="Work Experience">
+                    <div className="space-y-6">
+                      {(resume?.employment || []).map((job: any, ji: number) => {
+                        // For each job, filter experience bullets by activeGroup if set
+                        // Build selected skill id set from chosen groups (multi-select)
+                        const selectedGroupIds = Object.keys(activeGroups).filter(
+                          (k) => activeGroups[k]
+                        );
+                        const selectedSkillIds = new Set<string>();
+                        for (const gid of selectedGroupIds) {
+                          for (const sid of groupIdToSkills[gid] || [])
+                            selectedSkillIds.add(sid);
+                        }
+
+                        const bullets = (job.experience || []).filter((e: any) => {
+                          if (selectedSkillIds.size === 0) return true; // no filter active
+                          return (e.tags || []).some((t: string) =>
+                            selectedSkillIds.has(t)
+                          );
+                        });
+
+                        if (bullets.length === 0) return null; // hide job if no matching bullets under filter
+
+                        return (
+                          <div
+                            key={ji}
+                            className="p-4 rounded-md bg-card/60 ring-1 ring-border"
+                          >
+                            <div className="flex items-baseline justify-between">
+                              <h4 className="text-sm font-semibold text-foreground">
+                                {job.title}{" "}
+                                <p className="font-normal text-muted-foreground">
+                                  {job.company ? `@ ${job.company}` : ""}
+                                </p>
+                              </h4>
+                              <span className="text-xs text-muted-foreground/70">
+                                {job.start_date}
+                                {job.end_date ? ` to ${job.end_date}` : ""}
+                              </span>
+                            </div>
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              {job.summary}
+                            </p>
+                            <ul className="mt-3 space-y-2">
+                              {bullets.map((b: any, bi: number) => (
+                                <li
+                                  key={bi}
+                                  className={`flex gap-x-3 items-start transition-all duration-300 ease-in-out ${
+                                    isFiltering
+                                      ? "animate-fade-out"
+                                      : "animate-fade-in"
+                                  }`}
+                                >
+                                  <svg
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    aria-hidden="true"
+                                    className="h-5 w-5 flex-none text-primary mt-0.5"
+                                  >
+                                    <circle cx="10" cy="10" r="3" />
+                                  </svg>
+                                  <div className="flex-1">
+                                    <span className="text-sm text-muted-foreground">
+                                      {b.text}
+                                    </span>
+                                    {/* Skill group pills */}
+                                    {b.tags && b.tags.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 mt-1">
+                                        {(() => {
+                                          // Collect all unique group IDs for this bullet's tags
+                                          const uniqueGroupIds = new Set<string>();
+                                          b.tags.forEach((tagId: string) => {
+                                            const skill = skillsData?.skills?.find(
+                                              (s: any) => s.id === tagId
+                                            );
+                                            const groupIds = skill?.groups || [];
+                                            groupIds.forEach((groupId: string) =>
+                                              uniqueGroupIds.add(groupId)
+                                            );
+                                          });
+
+                                          // Convert to array and limit to first 3 groups
+                                          return Array.from(uniqueGroupIds)
+                                            .slice(0, 3)
+                                            .map((groupId: string) => {
+                                              const group =
+                                                skillsData?.groups?.find(
+                                                  (g: any) => g.id === groupId
+                                                );
+                                              if (!group) return null;
+
+                                              return (
+                                                <span
+                                                  key={groupId}
+                                                  className="px-2 py-0.5 rounded-full text-xs bg-secondary/60 text-secondary-foreground border border-border"
+                                                >
+                                                  {group.name}
+                                                </span>
+                                              );
+                                            });
+                                        })()}
+                                      </div>
+                                    )}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </Section>
+
+                  {/* Education */}
+                  {resume && (resume.education || []).length > 0 && (
+                    <Section title="Education">
+                      <div className="space-y-4">
+                        {resume.education.map((e: any, i: number) => (
+                          <div
+                            key={i}
+                            className="p-3 rounded-md bg-card/60 ring-1 ring-border"
+                          >
+                            <div className="flex items-baseline justify-between">
+                              <h4 className="text-sm font-semibold text-foreground">
+                                {e.title}
+                              </h4>
+                              <span className="text-xs text-muted-foreground/70">
+                                {e.start_date ? `${e.start_date}` : ""}{e.end_date ? ` — ${e.end_date}` : ""}
+                              </span>
+                            </div>
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              {e.school}
+                              {e.gpa ? ` • GPA: ${e.gpa}` : ""}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </Section>
+                  )}
+
+                  {/* Certifications */}
+                  {resume && (resume.certifications || []).length > 0 && (
+                    <Section title="Certifications">
+                      <div className="space-y-3">
+                        {resume.certifications.map((c: any, i: number) => (
+                          <div
+                            key={i}
+                            className="p-3 rounded-md bg-card/60 ring-1 ring-border"
+                          >
+                            <div className="flex items-baseline justify-between">
+                              <h4 className="text-sm font-semibold text-foreground">
+                                {c.name}
+                              </h4>
+                              <span className="text-xs text-muted-foreground/70">
+                                {c.date}
+                              </span>
+                            </div>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                              {c.issuer} — {c.description}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </Section>
+                  )}
+                </div>
+              </div>
+            </div>
+          </main>
+        </>
+      )}
     </div>
   );
 }

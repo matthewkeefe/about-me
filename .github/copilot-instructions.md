@@ -245,3 +245,76 @@ Use `setIsFiltering(true)` → timeout → update state → timeout → `setIsFi
 - Don't add routing libraries - keep the simple two-file structure
 - Don't inline large data - keep using the JSON content pattern
 - Don't break the theme synchronization between pages
+
+## Resume Extract Workflow (DOCX → Markdown → JSON)
+
+This project treats the Microsoft Word resume (`content/Matt_Keefe__Resume__2025.docx`) as the single source of truth. We support two rendering modes:
+
+- Interactive (default): uses `content/resume.json` + `content/skills.json` for filtering, tagging, and animations
+- Markdown mode: renders `content/generated/resume.md` directly (no filtering)
+
+### 1) Export DOCX → Markdown/HTML
+
+Tools and scripts:
+
+- Converter script: `scripts/extract-resume.mjs` (uses `mammoth`)
+- NPM script: `npm run resume:extract`
+- Outputs:
+  - `content/generated/resume.md`
+  - `content/generated/resume.html`
+
+Steps:
+
+1. Ensure the DOCX master file exists at `content/Matt_Keefe__Resume__2025.docx`
+2. Run the extractor
+  - This reads the DOCX and regenerates the Markdown and HTML exports
+3. Review `content/generated/resume.md` for heading/bullet fidelity
+
+Notes:
+
+- `mammoth` is listed in devDependencies and `extract-resume.mjs` handles exporting to both Markdown and HTML.
+
+### 2) Update JSON from Markdown (structure reference only)
+
+`content/resume.json` and `content/skills.json` follow the app’s interactive schema:
+
+- `resume.json` contains: name, title, summary (with `professional_summary`, `key_skills`, `technical_proficiencies`), `employment[]` (with `experience[].tags`), `education[]`, and `certifications[]`.
+- `skills.json` contains: `groups[]` and `skills[]` where each `skill.groups[]` lists its group IDs. Bullet `tags[]` refer to skill IDs.
+
+When the DOCX changes:
+
+1. Treat the DOCX as the master. Use the Markdown as a reference to copy across only the roles, bullets, and sections present in the DOCX.
+2. Update `content/resume.json`
+  - Remove positions and bullets that no longer appear in the DOCX
+  - Keep dates and summaries aligned with DOCX phrasing
+  - Map each bullet’s concepts to `skills.json` skill IDs in `tags[]`
+3. Update `content/skills.json`
+  - Add any newly referenced skills (e.g., Visualforce, Flow, CRM Analytics, TypeScript, Bash)
+  - Place them in appropriate groups; add helpful aliases for matching/tagging
+
+Tip: keep `key_skills` and `technical_proficiencies` synchronized with the DOCX sections.
+
+### 3) Optional: Render Markdown directly
+
+The resume page supports a Markdown-only mode for quick review of the DOCX export.
+
+- Default (interactive): `/resume.html`
+- Markdown mode: `/resume.html?md=1`
+
+Implementation notes:
+
+- `resume.tsx` checks `?md=1` and, if present, fetches `/content/generated/resume.md` and renders it with `react-markdown` inside a `prose` container.
+- A link appears in the interactive header to view Markdown, and in Markdown mode to switch back.
+
+### 4) Verification
+
+- Build: `npm run build`
+- Interactive view should still render and filter using JSON
+- Markdown mode should display the exported `resume.md` content faithfully
+
+### 5) Maintenance checklist
+
+- After editing the DOCX, always re-run `npm run resume:extract`
+- Reconcile JSON to the DOCX (remove outdated roles/bullets)
+- Add/update skills and aliases as needed to keep tags meaningful
+- Keep the Education and Certifications sections aligned with the DOCX wording and dates

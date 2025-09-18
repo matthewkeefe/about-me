@@ -37,12 +37,15 @@
 
     { "id": "salesforce_platform", "name": "Salesforce Platform", "groups": ["salesforce"], "aliases": ["SFDC"] },
     { "id": "apex", "name": "Apex", "groups": ["salesforce","backend"], "aliases": ["Batch Apex","Triggers"] },
-    { "id": "lwc", "name": "Lightning Web Components", "groups": ["salesforce","frontend"], "aliases": ["LWC"] },
+  { "id": "lwc", "name": "Lightning Web Components", "groups": ["salesforce","frontend"], "aliases": ["LWC"] },
+  { "id": "visualforce", "name": "Visualforce", "groups": ["salesforce","frontend"], "aliases": [] },
     { "id": "soql", "name": "SOQL/SOSL", "groups": ["salesforce","backend"], "aliases": ["DML"] },
+  { "id": "flow", "name": "Flow", "groups": ["salesforce"], "aliases": ["Salesforce Flow"] },
     { "id": "sales_cloud", "name": "Sales Cloud", "groups": ["salesforce"], "aliases": [] },
     { "id": "service_cloud", "name": "Service Cloud", "groups": ["salesforce"], "aliases": [] },
     { "id": "experience_cloud", "name": "Experience Cloud", "groups": ["salesforce","frontend"], "aliases": ["Communities"] },
-    { "id": "sf_rest_api", "name": "Salesforce REST APIs", "groups": ["salesforce","backend"], "aliases": [] },
+  { "id": "sf_rest_api", "name": "Salesforce REST APIs", "groups": ["salesforce","backend"], "aliases": ["REST API"] },
+  { "id": "crm_analytics", "name": "CRM Analytics", "groups": ["salesforce","data_analytics"], "aliases": ["Tableau CRM", "Einstein Analytics"] },
 
     { "id": "servicenow", "name": "ServiceNow", "groups": ["servicenow"], "aliases": ["SNOW"] },
     { "id": "servicenow_spm", "name": "ServiceNow SPM", "groups": ["servicenow","process"], "aliases": ["Strategic Program Management"] },
@@ -53,7 +56,8 @@
     { "id": "power_query_m", "name": "Power Query (M)", "groups": ["data_analytics"], "aliases": [] },
     { "id": "excel_advanced", "name": "Excel (Advanced)", "groups": ["data_analytics","tooling"], "aliases": ["Power Query","PivotTables"] },
 
-    { "id": "react", "name": "React", "groups": ["frontend"], "aliases": ["React.js"] },
+  { "id": "react", "name": "React", "groups": ["frontend"], "aliases": ["React.js"] },
+  { "id": "typescript", "name": "TypeScript", "groups": ["frontend","backend"], "aliases": ["TS"] },
     { "id": "css_html", "name": "CSS/HTML", "groups": ["frontend"], "aliases": [] },
     { "id": "ui_ux", "name": "UI/UX & HCI", "groups": ["frontend"], "aliases": ["human-computer interaction","style guide"] },
 
@@ -64,17 +68,18 @@
     { "id": "javascript", "name": "JavaScript", "groups": ["frontend","backend"], "aliases": ["jQuery","AJAX"] },
 
     { "id": "unix_linux", "name": "UNIX/Linux", "groups": ["systems"], "aliases": [] },
-    { "id": "bash", "name": "Bash / Shell Scripting", "groups": ["systems"], "aliases": ["shell scripts"] },
+  { "id": "bash", "name": "Bash / Shell Scripting", "groups": ["systems"], "aliases": ["shell scripts","Bash Shell Scripting"] },
     { "id": "leanix_cmdb", "name": "LeanIX / CMDB", "groups": ["systems","tooling"], "aliases": ["CMDB"] },
 
     { "id": "incident_response", "name": "Cyber Incident Response", "groups": ["security"], "aliases": ["outage bridge"] },
 
     { "id": "ai_enablement", "name": "AI Training & Advocacy", "groups": ["ai"], "aliases": ["AI training","AI advocacy"] },
+  { "id": "training_enablement", "name": "Training & Enablement", "groups": ["leadership"], "aliases": ["training","enablement","mentoring"] },
 
     { "id": "jira", "name": "Jira", "groups": ["tooling"], "aliases": [] },
     { "id": "confluence", "name": "Confluence", "groups": ["tooling"], "aliases": [] },
     { "id": "slack_automation", "name": "Slack Workflow Automation", "groups": ["tooling"], "aliases": ["Slack integrations"] },
     { "id": "documentation", "name": "Documentation & Diagrams", "groups": ["tooling"], "aliases": ["flow diagrams"] },
-    { "id": "sharepoint_teams", "name": "SharePoint and Teams", "groups": ["tooling"], "aliases": ["sharepoint"] }
+    { "id": "sharepoint_teams", "name": "SharePoint and Teams", "groups": ["tooling"], "aliases": ["sharepoint","Microsoft Teams"] }
   ]
 }
