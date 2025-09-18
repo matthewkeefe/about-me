@@ -28,12 +28,18 @@ const PageTitle = ({
   children?: React.ReactNode;
 }) => (
   <div className="relative isolate overflow-hidden bg-card pt-8 sm:pt-16 ">
-    <div className="mx-auto max-w-4xl px-6 lg:px-8">
+    <div className="mx-auto max-w-4xl px-6 lg:px-8 relative">
+      {/* top-right slot for optional children (e.g. View Markdown link) */}
+      {children && (
+        <div className="absolute top-3 right-4 sm:top-4 sm:right-6 z-20">
+          {children}
+        </div>
+      )}
+
       <h1 className="text-4xl font-semibold tracking-tight text-foreground mb-4">
         {name}
       </h1>
       <p className="mt-4 text-lg text-muted-foreground">{title}</p>
-      {children}
     </div>
   </div>
 );
@@ -49,30 +55,53 @@ const ProfessionalSummaryHero = ({
   title: string;
 }) => (
   <div className="relative isolate overflow-hidden bg-card pt-8 sm:pt-8 lg:pt-8">
-    {/* Blurry background effect */}
-    <div
-      aria-hidden="true"
-      className="absolute top-0 left-1/2 -z-10 -translate-x-1/2 blur-3xl xl:-top-6"
-    >
-      <div
-        style={{
-          clipPath:
-            "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-        }}
-        className="aspect-[1155/678] w-[72rem] bg-gradient-to-tr from-primary/30 to-secondary/30 opacity-20 dark:opacity-30"
-      />
-    </div>
-
     <div className="max-w-4xl mx-auto px-4">
-  <div className="mx-auto max-w-4xl px-6 lg:px-8 pt-8 pb-8 rounded-lg ring-1 ring-border mb-8">
-
+      <div className="relative mx-auto max-w-4xl px-6 lg:px-8 pt-8 pb-8 rounded-lg ring-1 ring-border mb-8 bg-card/80 backdrop-blur-sm shadow-lg/30 overflow-hidden">
+        
+        {/* Beautiful blurred circles using chart colors */}
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+          {/* Large central blur */}
+          <div 
+            className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/4 w-[32rem] h-[32rem] opacity-10 rounded-full blur-3xl"
+            style={{
+              background: 'radial-gradient(circle at center, var(--chart-2), var(--background))'
+            }}
+          ></div>
+          
+          {/* Top-right accent */}
+          <div 
+            className="absolute -top-40 -right-40 w-80 h-80 opacity-25 rounded-full blur-2xl"
+            style={{
+              background: 'radial-gradient(circle at center, var(--chart-4), var(--background))'
+            }}
+          ></div>
+          
+          {/* Bottom-left accent */}
+          <div 
+            className="absolute -bottom-32 -left-32 w-64 h-64 opacity-20 rounded-full blur-xl"
+            style={{
+              background: 'radial-gradient(circle at center, var(--chart-1), var(--background))'
+            }}
+          ></div>
+          
+          {/* Bottom-right small accent */}
+          <div 
+            className="absolute -bottom-24 -right-24 w-48 h-48 opacity-15 rounded-full blur-lg"
+            style={{
+              background: 'radial-gradient(circle at center, var(--chart-3), var(--background))'
+            }}
+          ></div>
+        </div>
+        
+        {/* Content positioned above the background */}
+        <div className="relative z-10">
           <h2 className="text-xl font-semibold text-foreground mb-4">
             Professional Summary
           </h2>
-          <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line mx-auto">
+          <p className="text-base leading-relaxed text-foreground whitespace-pre-line mx-auto">
             {summary}
           </p>
-
+        </div>
       </div>
     </div>
   </div>
@@ -226,13 +255,14 @@ function ResumeApp() {
       {isMarkdownMode && (
         <main className="flex-grow py-4">
           <div className="max-w-3xl mx-auto px-4">
-            <div className="mb-4 text-right">
+            <div className="mb-4 text-left">
               <a
                 href="/resume.html"
-                className="text-sm text-primary hover:underline"
-                title="Switch to interactive view"
+                aria-label="View interactive version"
+                title="View interactive version"
+                className="text-muted-foreground underline transition-all duration-200 ease-in-out text-sm font-medium bg-background"
               >
-                Switch to interactive view
+                Switch to Interactive Resume
               </a>
             </div>
             <div className="prose dark:prose-invert max-w-none">
@@ -253,15 +283,6 @@ function ResumeApp() {
               name={resume?.name ?? "Matthew Keefe"}
               title={resume?.title ?? "Resume"}
             >
-              <div className="mt-2">
-                <a
-                  href="/resume.html?md=1"
-                  className="text-sm text-primary hover:underline"
-                  title="View Markdown version"
-                >
-                  View Markdown version
-                </a>
-              </div>
             </PageTitle>
           )}
 

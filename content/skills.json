@@ -15,71 +15,326 @@
     { "id": "tooling", "name": "Tooling & Collaboration" }
   ],
   "skills": [
-    { "id": "people_leadership", "name": "People Leadership", "groups": ["leadership"], "aliases": ["people management","performance management","coaching"] },
-    { "id": "global_team_management", "name": "Global Team Management", "groups": ["leadership"], "aliases": ["distributed teams","cross-cultural collaboration"] },
-    { "id": "executive_comms", "name": "Executive Communication", "groups": ["leadership"], "aliases": ["exec comms","VP communication"] },
-    { "id": "stakeholder_mgmt", "name": "Stakeholder Management", "groups": ["leadership","process"], "aliases": ["alignment","buy-in"] },
+    {
+      "id": "people_leadership",
+      "name": "People Leadership",
+      "groups": ["leadership"],
+      "aliases": ["people management", "performance management", "coaching"]
+    },
+    {
+      "id": "global_team_management",
+      "name": "Global Team Management",
+      "groups": ["leadership"],
+      "aliases": ["distributed teams", "cross-cultural collaboration"]
+    },
+    {
+      "id": "executive_comms",
+      "name": "Executive Communication",
+      "groups": ["leadership"],
+      "aliases": ["exec comms", "VP communication"]
+    },
+    {
+      "id": "stakeholder_mgmt",
+      "name": "Stakeholder Management",
+      "groups": ["leadership", "process"],
+      "aliases": ["alignment", "buy-in"]
+    },
 
-    { "id": "agile", "name": "Agile Delivery", "groups": ["process"], "aliases": ["Scrum","Scaled Scrum","Kanban"] },
-    { "id": "program_mgmt", "name": "Program Management", "groups": ["process"], "aliases": [] },
-    { "id": "portfolio_mgmt", "name": "Portfolio Management", "groups": ["process"], "aliases": ["SPM","Strategic Portfolio Management"] },
-    { "id": "governance", "name": "Application Governance", "groups": ["process"], "aliases": ["release governance"] },
-    { "id": "change_mgmt", "name": "Change Management", "groups": ["process"], "aliases": ["organizational readiness"] },
-    { "id": "process_automation", "name": "Process Optimization & Automation", "groups": ["process"], "aliases": ["process improvement","automation"] },
+    {
+      "id": "agile",
+      "name": "Agile Delivery",
+      "groups": ["process"],
+      "aliases": ["Scrum", "Scaled Scrum", "Kanban"]
+    },
+    {
+      "id": "program_mgmt",
+      "name": "Program Management",
+      "groups": ["process"],
+      "aliases": []
+    },
+    {
+      "id": "portfolio_mgmt",
+      "name": "Portfolio Management",
+      "groups": ["process"],
+      "aliases": ["SPM", "Strategic Portfolio Management"]
+    },
+    {
+      "id": "governance",
+      "name": "Application Governance",
+      "groups": ["process"],
+      "aliases": ["release governance"]
+    },
+    {
+      "id": "change_mgmt",
+      "name": "Change Management",
+      "groups": ["process"],
+      "aliases": ["organizational readiness"]
+    },
+    {
+      "id": "process_automation",
+      "name": "Process Optimization & Automation",
+      "groups": ["process"],
+      "aliases": ["process improvement", "automation"]
+    },
 
-    { "id": "devops_strategy", "name": "DevOps Strategy", "groups": ["devops"], "aliases": [] },
-    { "id": "cicd", "name": "CI/CD", "groups": ["devops"], "aliases": ["continuous integration","continuous delivery","pipeline"] },
-    { "id": "github_actions", "name": "GitHub Actions", "groups": ["devops","tooling"], "aliases": ["GHA"] },
-    { "id": "harness", "name": "Harness", "groups": ["devops"], "aliases": ["Harness.io"] },
+    {
+      "id": "devops_strategy",
+      "name": "DevOps Strategy",
+      "groups": ["devops"],
+      "aliases": []
+    },
+    {
+      "id": "cicd",
+      "name": "CI/CD",
+      "groups": ["devops"],
+      "aliases": ["continuous integration", "continuous delivery", "pipeline"]
+    },
+    {
+      "id": "github_actions",
+      "name": "GitHub Actions",
+      "groups": ["devops", "tooling"],
+      "aliases": ["GHA"]
+    },
+    {
+      "id": "harness",
+      "name": "Harness",
+      "groups": ["devops"],
+      "aliases": ["Harness.io"]
+    },
     { "id": "bamboo", "name": "Bamboo", "groups": ["devops"], "aliases": [] },
-    { "id": "bitbucket_server", "name": "Bitbucket Server", "groups": ["devops"], "aliases": ["Bitbucket"] },
-    { "id": "sf_devops", "name": "Salesforce DevOps", "groups": ["devops","salesforce"], "aliases": ["SFDX","Salesforce CLI","Change Sets"] },
+    {
+      "id": "bitbucket_server",
+      "name": "Bitbucket Server",
+      "groups": ["devops"],
+      "aliases": ["Bitbucket"]
+    },
+    {
+      "id": "sf_devops",
+      "name": "Salesforce DevOps",
+      "groups": ["devops", "salesforce"],
+      "aliases": ["SFDX", "Salesforce CLI", "Change Sets"]
+    },
 
-    { "id": "salesforce_platform", "name": "Salesforce Platform", "groups": ["salesforce"], "aliases": ["SFDC"] },
-    { "id": "apex", "name": "Apex", "groups": ["salesforce","backend"], "aliases": ["Batch Apex","Triggers"] },
-  { "id": "lwc", "name": "Lightning Web Components", "groups": ["salesforce","frontend"], "aliases": ["LWC"] },
-  { "id": "visualforce", "name": "Visualforce", "groups": ["salesforce","frontend"], "aliases": [] },
-    { "id": "soql", "name": "SOQL/SOSL", "groups": ["salesforce","backend"], "aliases": ["DML"] },
-  { "id": "flow", "name": "Flow", "groups": ["salesforce"], "aliases": ["Salesforce Flow"] },
-    { "id": "sales_cloud", "name": "Sales Cloud", "groups": ["salesforce"], "aliases": [] },
-    { "id": "service_cloud", "name": "Service Cloud", "groups": ["salesforce"], "aliases": [] },
-    { "id": "experience_cloud", "name": "Experience Cloud", "groups": ["salesforce","frontend"], "aliases": ["Communities"] },
-  { "id": "sf_rest_api", "name": "Salesforce REST APIs", "groups": ["salesforce","backend"], "aliases": ["REST API"] },
-  { "id": "crm_analytics", "name": "CRM Analytics", "groups": ["salesforce","data_analytics"], "aliases": ["Tableau CRM", "Einstein Analytics"] },
+    {
+      "id": "salesforce_platform",
+      "name": "Salesforce Platform",
+      "groups": ["salesforce"],
+      "aliases": ["SFDC"]
+    },
+    {
+      "id": "apex",
+      "name": "Apex",
+      "groups": ["salesforce", "backend"],
+      "aliases": ["Batch Apex", "Triggers"]
+    },
+    {
+      "id": "lwc",
+      "name": "Lightning Web Components",
+      "groups": ["salesforce", "frontend"],
+      "aliases": ["LWC"]
+    },
+    {
+      "id": "visualforce",
+      "name": "Visualforce",
+      "groups": ["salesforce", "frontend"],
+      "aliases": []
+    },
+    {
+      "id": "soql",
+      "name": "SOQL/SOSL",
+      "groups": ["salesforce", "backend"],
+      "aliases": ["DML"]
+    },
+    {
+      "id": "flow",
+      "name": "Flow",
+      "groups": ["salesforce"],
+      "aliases": ["Salesforce Flow"]
+    },
+    {
+      "id": "sales_cloud",
+      "name": "Sales Cloud",
+      "groups": ["salesforce"],
+      "aliases": []
+    },
+    {
+      "id": "service_cloud",
+      "name": "Service Cloud",
+      "groups": ["salesforce"],
+      "aliases": []
+    },
+    {
+      "id": "experience_cloud",
+      "name": "Experience Cloud",
+      "groups": ["salesforce", "frontend"],
+      "aliases": ["Communities"]
+    },
+    {
+      "id": "sf_rest_api",
+      "name": "Salesforce REST APIs",
+      "groups": ["salesforce", "backend"],
+      "aliases": ["REST API"]
+    },
+    {
+      "id": "crm_analytics",
+      "name": "CRM Analytics",
+      "groups": ["salesforce", "data_analytics"],
+      "aliases": ["Tableau CRM", "Einstein Analytics"]
+    },
+    {
+      "id": "reporting",
+      "name": "Reporting",
+      "groups": ["data_analytics"],
+      "aliases": []
+    },
+    {
+      "id": "servicenow",
+      "name": "ServiceNow",
+      "groups": ["servicenow"],
+      "aliases": ["SNOW"]
+    },
+    {
+      "id": "servicenow_spm",
+      "name": "ServiceNow SPM",
+      "groups": ["servicenow", "process"],
+      "aliases": ["Strategic Program Management"]
+    },
+    {
+      "id": "servicenow_test_mgmt",
+      "name": "ServiceNow Test Management",
+      "groups": ["servicenow"],
+      "aliases": ["test management"]
+    },
 
-    { "id": "servicenow", "name": "ServiceNow", "groups": ["servicenow"], "aliases": ["SNOW"] },
-    { "id": "servicenow_spm", "name": "ServiceNow SPM", "groups": ["servicenow","process"], "aliases": ["Strategic Program Management"] },
-    { "id": "servicenow_test_mgmt", "name": "ServiceNow Test Management", "groups": ["servicenow"], "aliases": ["test management"] },
-
-    { "id": "power_bi", "name": "Power BI", "groups": ["data_analytics"], "aliases": [] },
+    {
+      "id": "power_bi",
+      "name": "Power BI",
+      "groups": ["data_analytics"],
+      "aliases": []
+    },
     { "id": "dax", "name": "DAX", "groups": ["data_analytics"], "aliases": [] },
-    { "id": "power_query_m", "name": "Power Query (M)", "groups": ["data_analytics"], "aliases": [] },
-    { "id": "excel_advanced", "name": "Excel (Advanced)", "groups": ["data_analytics","tooling"], "aliases": ["Power Query","PivotTables"] },
+    {
+      "id": "power_query_m",
+      "name": "Power Query (M)",
+      "groups": ["data_analytics"],
+      "aliases": []
+    },
+    {
+      "id": "excel_advanced",
+      "name": "Excel (Advanced)",
+      "groups": ["data_analytics", "tooling"],
+      "aliases": ["Power Query", "PivotTables"]
+    },
 
-  { "id": "react", "name": "React", "groups": ["frontend"], "aliases": ["React.js"] },
-  { "id": "typescript", "name": "TypeScript", "groups": ["frontend","backend"], "aliases": ["TS"] },
-    { "id": "css_html", "name": "CSS/HTML", "groups": ["frontend"], "aliases": [] },
-    { "id": "ui_ux", "name": "UI/UX & HCI", "groups": ["frontend"], "aliases": ["human-computer interaction","style guide"] },
+    {
+      "id": "react",
+      "name": "React",
+      "groups": ["frontend"],
+      "aliases": ["React.js"]
+    },
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "groups": ["frontend", "backend"],
+      "aliases": ["TS"]
+    },
+    {
+      "id": "css_html",
+      "name": "CSS/HTML",
+      "groups": ["frontend"],
+      "aliases": []
+    },
+    {
+      "id": "ui_ux",
+      "name": "UI/UX & HCI",
+      "groups": ["frontend"],
+      "aliases": ["human-computer interaction", "style guide"]
+    },
 
     { "id": "node", "name": "Node.js", "groups": ["backend"], "aliases": [] },
-    { "id": "rest_api", "name": "REST APIs", "groups": ["backend"], "aliases": [] },
-    { "id": "csharp", "name": "C# / .NET", "groups": ["backend"], "aliases": ["C#.NET",".NET"] },
+    {
+      "id": "rest_api",
+      "name": "REST APIs",
+      "groups": ["backend"],
+      "aliases": []
+    },
+    {
+      "id": "csharp",
+      "name": "C# / .NET",
+      "groups": ["backend"],
+      "aliases": ["C#.NET", ".NET"]
+    },
     { "id": "java", "name": "Java", "groups": ["backend"], "aliases": [] },
-    { "id": "javascript", "name": "JavaScript", "groups": ["frontend","backend"], "aliases": ["jQuery","AJAX"] },
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "groups": ["frontend", "backend"],
+      "aliases": ["jQuery", "AJAX"]
+    },
 
-    { "id": "unix_linux", "name": "UNIX/Linux", "groups": ["systems"], "aliases": [] },
-  { "id": "bash", "name": "Bash / Shell Scripting", "groups": ["systems"], "aliases": ["shell scripts","Bash Shell Scripting"] },
-    { "id": "leanix_cmdb", "name": "LeanIX / CMDB", "groups": ["systems","tooling"], "aliases": ["CMDB"] },
+    {
+      "id": "unix_linux",
+      "name": "UNIX/Linux",
+      "groups": ["systems"],
+      "aliases": []
+    },
+    {
+      "id": "bash",
+      "name": "Bash / Shell Scripting",
+      "groups": ["systems"],
+      "aliases": ["shell scripts", "Bash Shell Scripting"]
+    },
+    {
+      "id": "leanix_cmdb",
+      "name": "LeanIX / CMDB",
+      "groups": ["systems", "tooling"],
+      "aliases": ["CMDB"]
+    },
 
-    { "id": "incident_response", "name": "Cyber Incident Response", "groups": ["security"], "aliases": ["outage bridge"] },
+    {
+      "id": "incident_response",
+      "name": "Cyber Incident Response",
+      "groups": ["security"],
+      "aliases": ["outage bridge"]
+    },
 
-    { "id": "ai_enablement", "name": "AI Training & Advocacy", "groups": ["ai"], "aliases": ["AI training","AI advocacy"] },
-  { "id": "training_enablement", "name": "Training & Enablement", "groups": ["leadership"], "aliases": ["training","enablement","mentoring"] },
+    {
+      "id": "ai_enablement",
+      "name": "AI Training & Advocacy",
+      "groups": ["ai"],
+      "aliases": ["AI training", "AI advocacy"]
+    },
+    {
+      "id": "training_enablement",
+      "name": "Training & Enablement",
+      "groups": ["leadership"],
+      "aliases": ["training", "enablement", "mentoring"]
+    },
 
     { "id": "jira", "name": "Jira", "groups": ["tooling"], "aliases": [] },
-    { "id": "confluence", "name": "Confluence", "groups": ["tooling"], "aliases": [] },
-    { "id": "slack_automation", "name": "Slack Workflow Automation", "groups": ["tooling"], "aliases": ["Slack integrations"] },
-    { "id": "documentation", "name": "Documentation & Diagrams", "groups": ["tooling"], "aliases": ["flow diagrams"] },
-    { "id": "sharepoint_teams", "name": "SharePoint and Teams", "groups": ["tooling"], "aliases": ["sharepoint","Microsoft Teams"] }
+    {
+      "id": "confluence",
+      "name": "Confluence",
+      "groups": ["tooling"],
+      "aliases": []
+    },
+    {
+      "id": "slack_automation",
+      "name": "Slack Workflow Automation",
+      "groups": ["tooling"],
+      "aliases": ["Slack integrations"]
+    },
+    {
+      "id": "documentation",
+      "name": "Documentation & Diagrams",
+      "groups": ["tooling"],
+      "aliases": ["flow diagrams"]
+    },
+    {
+      "id": "sharepoint_teams",
+      "name": "SharePoint and Teams",
+      "groups": ["tooling"],
+      "aliases": ["sharepoint", "Microsoft Teams"]
+    }
   ]
 }

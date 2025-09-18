@@ -62,16 +62,32 @@
           "tags": ["servicenow_test_mgmt", "servicenow", "training_enablement"]
         },
         {
+          "text": "Standardized work management practices; realigned Scrum Master support to ensure consistent methodology across enterprise app teams.",
+          "tags": ["agile", "governance", "process_automation"]
+        },
+        {
+          "text": "Transitioned Enterprise Applications to a hybrid Waterfall/Agile model in ServiceNow, improving visibility across dev, ops, and break-fix.",
+          "tags": ["servicenow", "agile", "governance"]
+        },
+        {
+          "text": "Orchestrated cyber incident response affecting 150+ applications; led outage bridge, CMDB remediation, and restoration efforts.",
+          "tags": ["incident_response", "leanix_cmdb", "program_mgmt"]
+        },
+        {
           "text": "Introduced and led AI training programs that encouraged adoption and equipped peers with time-saving practices, strengthening overall team efficiency.",
           "tags": ["ai_enablement", "training_enablement"]
         },
         {
           "text": "Oversaw evolution of Salesforce DevOps pipelines from Bamboo to GitHub Actions and subsequently to Harness.io, retiring Change Sets and streamlining deployment processes, reducing configuration change deployment by 50%+ and ensuring full traceability and compliance across releases.",
-          "tags": ["sf_devops", "bamboo", "github_actions", "harness", "cicd"]
+          "tags": ["sf_devops", "bamboo", "github_actions", "harness", "cicd", "bash", "governance"]
         },
         {
           "text": "Developed and refined Power BI dashboards and KPIs focused on SLA accountability for managed service provider, leveraging Power Query M, DAX, and REST API connections, leading to 99%+ SLA adherence.",
           "tags": ["power_bi", "power_query_m", "dax", "rest_api"]
+        },
+        {
+          "text": "Drove a culture of continuous learning and accountability, reaching 100% completion of team training and development goals.",
+          "tags": ["people_leadership", "training_enablement"]
         }
       ]
     },
@@ -92,15 +108,23 @@
         },
         {
           "text": "Developed Agile dashboards in Jira with custom reports, tracking metrics and sprint delivery, linking work items to releases, and providing transparency for leadership.",
-          "tags": ["jira", "agile", "governance"]
+          "tags": ["jira", "agile", "governance", "reporting"]
         },
         {
           "text": "Championed Agile methodologies, facilitating adoption of Scrum practices and ongoing process improvement.",
           "tags": ["agile", "process_automation"]
         },
         {
+          "text": "Mentored interns and junior engineers to grow platform familiarity and skills.",
+          "tags": ["people_leadership", "training_enablement"]
+        },
+        {
           "text": "Established platform governance and best practices, shaping UI/UX decisions and tooling selection.",
           "tags": ["governance", "ui_ux"]
+        },
+        {
+          "text": "Implemented Slack workflow integrations to streamline issue triage.",
+          "tags": ["slack_automation", "process_automation"]
         },
         {
           "text": "Detailed flow diagrams and documentation, supporting cross-team collaboration and process clarity.",
